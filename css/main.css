@@ -20,10 +20,9 @@ body {
   font-size: 14px;
 }
 
-/* ===== NAVBAR ===== */
 #ers_navbar {
   background: var(--ers-aqua);
-  height: 56px;
+  height: 50px;
   display: flex;
   align-items: center;
   padding: 0 16px;
@@ -31,19 +30,14 @@ body {
   top: 0; left: 0; right: 0;
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  gap: 16px;
 }
 
-#ers_navbar_logo {
-  display: flex;
-  align-items: center;
-  min-width: 200px;
-}
-
-.ers_logo_text {
-  color: var(--ers-white);
-  font-size: 18px;
+#ers_navbar_logo .ers_logo_text {
+  color: #fff;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 #ers_navbar_tabs {
@@ -59,10 +53,11 @@ body {
   gap: 6px;
   color: rgba(255,255,255,0.85);
   text-decoration: none;
-  padding: 8px 14px;
+  padding: 7px 12px;
   border-radius: 4px;
   transition: background 0.2s, color 0.2s;
   font-size: 13px;
+  white-space: nowrap;
 }
 
 #ers_navbar_tabs li.active a,
@@ -85,28 +80,28 @@ body {
   padding: 6px 10px;
   border-radius: 4px;
   transition: background 0.2s;
+  white-space: nowrap;
 }
 
 #ers_user_menu:hover { background: rgba(255,255,255,0.15); }
 
-/* ===== SUBNAV ===== */
-#ers_subnav {
+#admin-subnav {
   background: #fff;
   border-bottom: 2px solid var(--ers-border);
-  margin-top: 56px;
+  margin-top: 50px;
   padding: 0 16px;
   overflow-x: auto;
 }
 
-#ers_subnav ul {
+#admin-subnav ul {
   list-style: none;
   display: flex;
   gap: 0;
 }
 
-#ers_subnav ul li a {
+#admin-subnav ul li a {
   display: block;
-  padding: 10px 14px;
+  padding: 9px 14px;
   color: #555;
   text-decoration: none;
   font-size: 13px;
@@ -115,15 +110,13 @@ body {
   white-space: nowrap;
 }
 
-#ers_subnav ul li a:hover {
+#admin-subnav ul li a:hover {
   color: var(--ers-aqua);
   border-bottom-color: var(--ers-aqua);
 }
 
-/* ===== MAIN CONTENT ===== */
 #ers_main_content {
   padding: 16px;
-  margin-top: 0;
 }
 
 .ers_row {
@@ -138,11 +131,10 @@ body {
 }
 
 .ers_col_right {
-  width: 320px;
+  width: 310px;
   flex-shrink: 0;
 }
 
-/* ===== WIDGETS ===== */
 .ers_widget {
   background: #fff;
   border-radius: 6px;
@@ -155,52 +147,49 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--ers-border);
   background: #fafbfc;
 }
 
 .ers_widget_title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--ers-aqua);
 }
 
-.ers_widget_title i {
-  margin-right: 6px;
-}
+.ers_widget_title i { margin-right: 5px; }
 
-/* ===== CALENDAR ===== */
 .ers_cal_nav {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .ers_cal_nav button {
   background: none;
   border: 1px solid var(--ers-border);
   border-radius: 4px;
-  padding: 4px 8px;
+  padding: 3px 8px;
   cursor: pointer;
   color: var(--ers-aqua);
-  font-size: 12px;
+  font-size: 11px;
   transition: background 0.2s;
 }
 
 .ers_cal_nav button:hover { background: var(--ers-bg); }
 
-#cal_month_label {
+#calendar_month_display {
   font-weight: 600;
-  font-size: 14px;
-  min-width: 100px;
+  font-size: 13px;
+  min-width: 90px;
   text-align: center;
 }
 
 .ers_cal_filters {
   display: flex;
   gap: 12px;
-  padding: 8px 16px;
+  padding: 6px 14px;
   background: #fafbfc;
   border-bottom: 1px solid var(--ers-border);
   flex-wrap: wrap;
@@ -209,15 +198,15 @@ body {
 .ers_cal_filters label {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-size: 12px;
   cursor: pointer;
 }
 
 .dot {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
 }
 
@@ -235,12 +224,13 @@ body {
 .cal_table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 400px;
 }
 
 .cal_table th {
   text-align: center;
-  padding: 6px 4px;
-  font-size: 12px;
+  padding: 5px 2px;
+  font-size: 11px;
   font-weight: 600;
   color: #666;
   background: #f8f9fa;
@@ -248,11 +238,10 @@ body {
 
 .cal_table td {
   border: 1px solid #eee;
-  padding: 4px;
+  padding: 3px;
   vertical-align: top;
-  height: 60px;
-  width: calc(100% / 7);
-  font-size: 12px;
+  height: 55px;
+  font-size: 11px;
 }
 
 .cal_day_num {
@@ -266,14 +255,14 @@ body {
   background: var(--ers-aqua);
   color: #fff;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  display: flex;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.cal_other_month { opacity: 0.4; }
+.cal_other_month { opacity: 0.35; background: #fafafa; }
 
 .cal_event {
   display: block;
@@ -292,17 +281,18 @@ body {
 .cal_event_willcall { background: #9b59b6; }
 .cal_event_setup { background: #27ae60; }
 .cal_event_breakdown { background: #e74c3c; }
+.cal_event_active { background: #3498db; }
+.cal_event_holiday { background: #95a5a6; }
 
-/* ===== CHARTS ===== */
 .ers_charts_row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  margin-bottom: 16px;
 }
 
 .ers_chart_widget { margin-bottom: 0; }
 
-/* ===== STAT WIDGETS ===== */
 .ers_stats_row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -312,67 +302,57 @@ body {
 
 .ers_stat_widget {
   border-radius: 6px;
-  padding: 14px;
+  padding: 12px;
   color: #fff;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   box-shadow: var(--ers-shadow);
 }
 
-.ers_stat_widget > i {
-  font-size: 28px;
-  opacity: 0.85;
-}
+.ers_stat_widget > i { font-size: 24px; opacity: 0.85; }
 
 .ers_stat_info { display: flex; flex-direction: column; }
 
 .ers_stat_num {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1;
 }
 
 .ers_stat_label {
-  font-size: 12px;
+  font-size: 11px;
   opacity: 0.9;
   margin-top: 2px;
 }
 
-/* ===== WEATHER ===== */
 .ers_weather_content {
   display: flex;
   align-items: center;
-  padding: 16px;
-  gap: 20px;
+  padding: 12px 14px;
+  gap: 16px;
 }
 
 .ers_weather_today {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 80px;
+  min-width: 72px;
 }
 
-.ers_weather_icon {
-  font-size: 40px;
-  color: #f7c948;
-}
+.ers_weather_icon { font-size: 34px; color: #f7c948; }
 
 .ers_weather_temp {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
   color: #333;
 }
 
-.ers_weather_desc {
-  font-size: 12px;
-  color: #666;
-}
+.ers_weather_desc { font-size: 11px; color: #666; }
 
 .ers_weather_forecast {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex: 1;
   justify-content: space-around;
 }
@@ -381,24 +361,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  gap: 3px;
+  font-size: 11px;
   color: #555;
 }
 
-.ers_forecast_day i {
-  font-size: 18px;
-  color: var(--ers-aqua);
-}
+.ers_forecast_day i { font-size: 16px; color: var(--ers-aqua); }
 
-/* ===== TASKS ===== */
-.ers_tasks_list {
-  list-style: none;
-  padding: 8px 0;
-}
+.ers_tasks_list { list-style: none; padding: 4px 0; }
 
 .ers_task {
-  padding: 8px 16px;
+  padding: 7px 14px;
   font-size: 13px;
   border-bottom: 1px solid #f0f0f0;
   display: flex;
@@ -408,14 +381,8 @@ body {
 }
 
 .ers_task:last-child { border-bottom: none; }
-
-.ers_task i { color: #ccc; font-size: 14px; }
-
-.ers_task.done {
-  text-decoration: line-through;
-  color: #aaa;
-}
-
+.ers_task i { color: #ccc; font-size: 13px; }
+.ers_task.done { text-decoration: line-through; color: #aaa; }
 .ers_task.done i { color: #27ae60; }
 
 .ers_btn_small {
@@ -423,7 +390,7 @@ body {
   color: #fff;
   border: none;
   border-radius: 4px;
-  padding: 4px 10px;
+  padding: 3px 8px;
   font-size: 12px;
   cursor: pointer;
   transition: background 0.2s;
@@ -431,31 +398,29 @@ body {
 
 .ers_btn_small:hover { background: var(--ers-aqua-dark); }
 
-/* ===== CHANGELOG ===== */
-.ers_changelog_list {
-  list-style: none;
-  padding: 8px 0;
-}
+.ers_changelog_list { list-style: none; padding: 4px 0; }
 
 .ers_changelog_list li {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 7px 14px;
   border-bottom: 1px solid #f0f0f0;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .ers_changelog_list li:last-child { border-bottom: none; }
 
 .ers_badge {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  padding: 2px 6px;
+  padding: 2px 5px;
   border-radius: 10px;
   white-space: nowrap;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-top: 1px;
+  flex-shrink: 0;
 }
 
 .badge_new { background: #d4edda; color: #155724; }
@@ -463,14 +428,8 @@ body {
 .badge_fixed { background: #fff3cd; color: #856404; }
 
 .ers_change_text { flex: 1; color: #444; }
+.ers_change_date { font-size: 10px; color: #aaa; white-space: nowrap; margin-top: 1px; }
 
-.ers_change_date {
-  font-size: 11px;
-  color: #aaa;
-  white-space: nowrap;
-}
-
-/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .ers_row { flex-direction: column; }
   .ers_col_right { width: 100%; }
