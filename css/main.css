@@ -1,1 +1,478 @@
-+14095275463
+:root {
+  --ers-aqua: #068688;
+  --ers-aqua-highlight: #19b8bb;
+  --ers-aqua-dark: #055a5c;
+  --ers-orange: #f07820;
+  --ers-orange-dark: #d4661a;
+  --ers-text: #333333;
+  --ers-bg: #f4f6f8;
+  --ers-white: #ffffff;
+  --ers-border: #dde1e5;
+  --ers-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--ers-bg);
+  color: var(--ers-text);
+  font-size: 14px;
+}
+
+/* ===== NAVBAR ===== */
+#ers_navbar {
+  background: var(--ers-aqua);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+#ers_navbar_logo {
+  display: flex;
+  align-items: center;
+  min-width: 200px;
+}
+
+.ers_logo_text {
+  color: var(--ers-white);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+#ers_navbar_tabs {
+  display: flex;
+  list-style: none;
+  flex: 1;
+  gap: 2px;
+}
+
+#ers_navbar_tabs li a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+  font-size: 13px;
+}
+
+#ers_navbar_tabs li.active a,
+#ers_navbar_tabs li a:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+#ers_navbar_right {
+  display: flex;
+  align-items: center;
+}
+
+#ers_user_menu {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+#ers_user_menu:hover { background: rgba(255,255,255,0.15); }
+
+/* ===== SUBNAV ===== */
+#ers_subnav {
+  background: #fff;
+  border-bottom: 2px solid var(--ers-border);
+  margin-top: 56px;
+  padding: 0 16px;
+  overflow-x: auto;
+}
+
+#ers_subnav ul {
+  list-style: none;
+  display: flex;
+  gap: 0;
+}
+
+#ers_subnav ul li a {
+  display: block;
+  padding: 10px 14px;
+  color: #555;
+  text-decoration: none;
+  font-size: 13px;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+#ers_subnav ul li a:hover {
+  color: var(--ers-aqua);
+  border-bottom-color: var(--ers-aqua);
+}
+
+/* ===== MAIN CONTENT ===== */
+#ers_main_content {
+  padding: 16px;
+  margin-top: 0;
+}
+
+.ers_row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.ers_col_left {
+  flex: 1;
+  min-width: 0;
+}
+
+.ers_col_right {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+/* ===== WIDGETS ===== */
+.ers_widget {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: var(--ers-shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.ers_widget_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ers-border);
+  background: #fafbfc;
+}
+
+.ers_widget_title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ers-aqua);
+}
+
+.ers_widget_title i {
+  margin-right: 6px;
+}
+
+/* ===== CALENDAR ===== */
+.ers_cal_nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ers_cal_nav button {
+  background: none;
+  border: 1px solid var(--ers-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--ers-aqua);
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.ers_cal_nav button:hover { background: var(--ers-bg); }
+
+#cal_month_label {
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.ers_cal_filters {
+  display: flex;
+  gap: 12px;
+  padding: 8px 16px;
+  background: #fafbfc;
+  border-bottom: 1px solid var(--ers-border);
+  flex-wrap: wrap;
+}
+
+.ers_cal_filters label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot_delivery { background: #068688; }
+.dot_pickup { background: #e67e22; }
+.dot_will_call { background: #9b59b6; }
+.dot_setup { background: #27ae60; }
+.dot_breakdown { background: #e74c3c; }
+
+#calendar_container {
+  padding: 8px;
+  overflow-x: auto;
+}
+
+.cal_table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cal_table th {
+  text-align: center;
+  padding: 6px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  background: #f8f9fa;
+}
+
+.cal_table td {
+  border: 1px solid #eee;
+  padding: 4px;
+  vertical-align: top;
+  height: 60px;
+  width: calc(100% / 7);
+  font-size: 12px;
+}
+
+.cal_day_num {
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.cal_today .cal_day_num {
+  background: var(--ers-aqua);
+  color: #fff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cal_other_month { opacity: 0.4; }
+
+.cal_event {
+  display: block;
+  font-size: 10px;
+  padding: 1px 3px;
+  border-radius: 2px;
+  margin-bottom: 1px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cal_event_delivery { background: #068688; }
+.cal_event_pickup { background: #e67e22; }
+.cal_event_willcall { background: #9b59b6; }
+.cal_event_setup { background: #27ae60; }
+.cal_event_breakdown { background: #e74c3c; }
+
+/* ===== CHARTS ===== */
+.ers_charts_row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.ers_chart_widget { margin-bottom: 0; }
+
+/* ===== STAT WIDGETS ===== */
+.ers_stats_row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.ers_stat_widget {
+  border-radius: 6px;
+  padding: 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--ers-shadow);
+}
+
+.ers_stat_widget > i {
+  font-size: 28px;
+  opacity: 0.85;
+}
+
+.ers_stat_info { display: flex; flex-direction: column; }
+
+.ers_stat_num {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ers_stat_label {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+/* ===== WEATHER ===== */
+.ers_weather_content {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 20px;
+}
+
+.ers_weather_today {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.ers_weather_icon {
+  font-size: 40px;
+  color: #f7c948;
+}
+
+.ers_weather_temp {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+}
+
+.ers_weather_desc {
+  font-size: 12px;
+  color: #666;
+}
+
+.ers_weather_forecast {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  justify-content: space-around;
+}
+
+.ers_forecast_day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #555;
+}
+
+.ers_forecast_day i {
+  font-size: 18px;
+  color: var(--ers-aqua);
+}
+
+/* ===== TASKS ===== */
+.ers_tasks_list {
+  list-style: none;
+  padding: 8px 0;
+}
+
+.ers_task {
+  padding: 8px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.ers_task:last-child { border-bottom: none; }
+
+.ers_task i { color: #ccc; font-size: 14px; }
+
+.ers_task.done {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.ers_task.done i { color: #27ae60; }
+
+.ers_btn_small {
+  background: var(--ers-aqua);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ers_btn_small:hover { background: var(--ers-aqua-dark); }
+
+/* ===== CHANGELOG ===== */
+.ers_changelog_list {
+  list-style: none;
+  padding: 8px 0;
+}
+
+.ers_changelog_list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+
+.ers_changelog_list li:last-child { border-bottom: none; }
+
+.ers_badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge_new { background: #d4edda; color: #155724; }
+.badge_improved { background: #d1ecf1; color: #0c5460; }
+.badge_fixed { background: #fff3cd; color: #856404; }
+
+.ers_change_text { flex: 1; color: #444; }
+
+.ers_change_date {
+  font-size: 11px;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .ers_row { flex-direction: column; }
+  .ers_col_right { width: 100%; }
+  .ers_charts_row { grid-template-columns: 1fr; }
+}
