@@ -369,3 +369,399 @@ document.addEventListener('DOMContentLoaded', function(){
   renderHomeMonthly();
   renderCustomersTable();
 });
+
+
+// =================== ADMIN SUBPAGE SYSTEM ===================
+var adminPageTitles = {
+  company_info:'Company Info', company_timezone:'Company Time Zone',
+  routing_settings:'Routing Settings', google_integration:'Google Integration Settings',
+  quickbooks:'Quickbooks Online', mailchimp:'Mailchimp Settings',
+  aweber:'AWeber Settings', constant_contact:'Constant Contact Settings',
+  text_messaging_settings:'Text Messaging Settings', text_messaging_logs:'Text Messaging Logs',
+  taxcloud:'TaxCloud Settings', misc_settings:'Misc Settings',
+  api_info:'Api Info', users:'Users', system_setup:'System Setup',
+  system_settings:'System Settings', locations:'Locations',
+  company_types:'Company Types', company_roles:'Company Roles',
+  highlevel_connect:'HighLevel Connect',
+  reminders:'Reminders', order_options:'Order Options',
+  misc_order_settings:'Misc Order Settings', coupons:'Coupons',
+  service_areas:'Service Areas', damage_waiver:'Damage Waiver',
+  taxes:'Taxes', discount_groups:'Discount Groups',
+  general_documents:'General Documents', contracts:'Contracts',
+  invoices_admin:'Invoices', quotes:'Quotes', surveys:'Surveys',
+  ersmail_templates:'ERSMail Templates', packing_lists:'Packing Lists',
+  merge_fields:'Merge Fields', digital_signatures:'Digital Signatures',
+  ersmail_log:'ERSMail Log',
+  categories:'Categories', items:'Items', addons:'Add-ons',
+  packages:'Packages', upsells:'Upsells', price_sheets:'Price Sheets',
+  delivery_rates:'Delivery Rates', product_pricing:'Product Pricing',
+  inventory:'Inventory', item_groups:'Item Groups', variants:'Variants',
+  adjustments:'Adjustments', deposits:'Deposits', pricing:'Pricing',
+  availability:'Availability',
+  website_pages:'Website Pages', images_admin:'Images', gallery:'Gallery',
+  navigation_editor:'Navigation Editor', blogs:'Blogs', testimonials:'Testimonials',
+  seo_settings:'SEO Settings', domain_settings:'Domain Settings'
+};
+
+function loadAdminPage(pageKey) {
+  var panel = document.getElementById('admin_subpage');
+  var grid = document.querySelector('#tab_admin .admin-grid');
+  var titleEl = document.getElementById('subpage_title');
+  var contentEl = document.getElementById('subpage_content');
+  if (!panel || !contentEl) return;
+  var title = adminPageTitles[pageKey] || pageKey;
+  titleEl.textContent = title;
+  contentEl.innerHTML = buildAdminPageContent(pageKey, title);
+  if (grid) grid.style.display = 'none';
+  panel.style.display = 'block';
+  panel.scrollIntoView({behavior:'smooth', block:'start'});
+  // Close subnav dropdowns
+  document.querySelectorAll('.subnav_group_links').forEach(function(l){l.style.display='none';});
+}
+
+function closeAdminPage() {
+  var panel = document.getElementById('admin_subpage');
+  var grid = document.querySelector('#tab_admin .admin-grid');
+  if (panel) panel.style.display = 'none';
+  if (grid) grid.style.display = 'grid';
+}
+
+function buildAdminPageContent(pageKey, title) {
+  // Table-based pages
+  var tablePages = {
+    users: {
+      cols: ['Username','Group','First Name','Last Name','Phone','Email'],
+      rows: [
+        ['ERS','Administrator','ERS','ERS','','junk@eventrentalsystems.com'],
+        ['LudmillaM','Administrator','Ludmila','Mendoza','(786) 307-2711','ludmilayhenry@gmail.com']
+      ]
+    },
+    general_documents: {
+      cols: ['Name'],
+      rows: [['Auto Message Do Not Send List'],['Virtual Terminal Receipt'],['Receipt Bottom'],
+             ['Payment Header'],['Contract Page 1'],['Contract Page 2'],['Quote'],
+             ['Raincheck'],['Quick Quote'],['Invoice'],['Cancel'],['Thank You Page']]
+    },
+    contracts: {
+      cols: ['Name','Type'],
+      rows: [['Standard Rental Contract','Contract'],['Commercial Contract','Contract'],
+             ['Damage Waiver Agreement','Document'],['Privacy Policy','Document']]
+    },
+    invoices_admin: {
+      cols: ['Name','Type'],
+      rows: [['Standard Invoice','Invoice'],['Commercial Invoice','Invoice'],
+             ['Deposit Receipt','Receipt'],['Final Invoice','Invoice']]
+    },
+    quotes: {
+      cols: ['Name','Type'],
+      rows: [['Standard Quote','Quote'],['Package Quote','Quote'],
+             ['Corporate Quote','Quote']]
+    },
+    surveys: {
+      cols: ['Name','Status'],
+      rows: [['Post-Event Customer Satisfaction','Active'],
+             ['Pre-Event Requirements','Active'],['Safety Checklist','Draft']]
+    },
+    ersmail_templates: {
+      cols: ['Name','Type'],
+      rows: [['Order Confirmation','Email'],['Payment Receipt','Email'],
+             ['Quote Follow-up','Email'],['Cancellation Notice','Email'],
+             ['Event Reminder','Email'],['Thank You After Event','Email']]
+    },
+    packing_lists: {
+      cols: ['Name'],
+      rows: [['Standard Packing List'],['Commercial Event List'],['Indoor Event List']]
+    },
+    categories: {
+      cols: ['Name','Display Name','Quantity','Active'],
+      rows: [['Bounce Houses','Bounce Houses','12','Yes'],
+             ['Dry Slides','Dry Slides','6','Yes'],
+             ['Water Slides','Water Slides','4','Yes'],
+             ['Combo Units','Combo Units','5','Yes'],
+             ['Hidden Category','Hidden Category','2','Yes'],
+             ['Generators','Generators','3','Yes']]
+    },
+    items: {
+      cols: ['Name','Type','Cost','Quantity','Category'],
+      rows: [
+        ['Blue Raspberry (Sugar Floss)','Regular','15','100','Hidden Category'],
+        ['Pink Vanilla','Regular','15','100','Hidden Category'],
+        ['All Star Sports Arena','','299','1','Bounce Houses'],
+        ['Carnival Kingdom','Regular','449','1','Bounce Houses'],
+        ['Dig and Dash Dozer','Regular','349','1','Bounce Houses'],
+        ['Game On','Regular','349','1','Bounce Houses'],
+        ['Mega Monster','Regular','349','1','Bounce Houses'],
+        ['Unicorn Dreamland','Regular','349','1','Bounce Houses'],
+        ['Fire Fighter Station','Regular','350','1','Bounce Houses'],
+        ['Bounce & Slide Combo','Regular','399','1','Combo Units'],
+        ['Classic Dry Slide','Regular','249','1','Dry Slides'],
+        ['Giant Wave Slide','Regular','299','1','Water Slides']
+      ]
+    },
+    addons: {
+      cols: ['Name','Price','Type'],
+      rows: [['Generator Rental','75','Add-on'],['Extension Cord','15','Add-on'],
+             ['Extra Hour','50','Add-on'],['Delivery Fee','35','Add-on']]
+    },
+    packages: {
+      cols: ['Name','Price','Items'],
+      rows: [['Party Starter Pack','499','Bounce House + Generator'],
+             ['Ultimate Fun Package','799','2 Bounce Houses + Generator'],
+             ['Wet & Wild Bundle','649','Water Slide + Generator']]
+    },
+    coupons: {
+      cols: ['Code','Discount','Type','Expires'],
+      rows: [['SUMMER10','10%','Percentage','12/31/2026'],
+             ['SAVE50','50','Fixed','06/30/2026'],
+             ['NEWCUST','15%','Percentage','Never']]
+    },
+    service_areas: {
+      cols: ['Name','Zip Codes','Delivery Fee'],
+      rows: [['St. Johns','32259, 32081, 32082','$35'],
+             ['Jacksonville','32202, 32204, 32205','$45'],
+             ['Fleming Island','32003, 32068','$40']]
+    },
+    taxes: {
+      cols: ['Name','Rate','State'],
+      rows: [['Florida Sales Tax','7%','FL'],['St Johns County','0.5%','FL']]
+    },
+    locations: {
+      cols: ['Name','Address','Phone'],
+      rows: [['Main Warehouse','92 Life Spring Way, Saint Johns FL 32259','904-429-9945']]
+    },
+    website_pages: {
+      cols: ['Page Name','URL','Status'],
+      rows: [['Home','/','Published'],['About Us','/about','Published'],
+             ['Products','/products','Published'],['Contact','/contact','Published'],
+             ['Blog','/blog','Published'],['FAQ','/faq','Draft']]
+    },
+    blogs: {
+      cols: ['Title','Date','Status'],
+      rows: [['Tips for Planning Your Kids Party','05/01/2026','Published'],
+             ['Top 10 Inflatables for Summer 2026','04/15/2026','Published'],
+             ['Safety Tips for Bounce Houses','03/22/2026','Published']]
+    },
+    testimonials: {
+      cols: ['Name','Rating','Date'],
+      rows: [['Sarah M.','5/5','05/10/2026'],['John D.','5/5','04/28/2026'],
+             ['Lisa K.','4/5','04/15/2026']]
+    },
+    adjustments: {
+      cols: ['Name','Type','Amount'],
+      rows: [['Weekend Surcharge','Percentage','10%'],
+             ['Holiday Rate','Percentage','25%'],
+             ['Last Minute Booking','Fixed','$50']]
+    },
+    deposits: {
+      cols: ['Name','Type','Amount','When Due'],
+      rows: [['Standard Deposit','Percentage','25%','At Booking'],
+             ['Full Payment','Percentage','100%','7 Days Before']]
+    },
+    pricing: {
+      cols: ['Name','Type','Applies To'],
+      rows: [['Peak Season','Percentage (+15%)','All Products'],
+             ['Corporate Discount','Percentage (-10%)','Commercial Orders']]
+    },
+    availability: {
+      cols: ['Name','Days','Hours'],
+      rows: [['Weekdays','Mon-Fri','9am-6pm'],
+             ['Weekends','Sat-Sun','8am-8pm'],
+             ['Holidays','Closed','N/A']]
+    }
+  };
+
+  if (tablePages[pageKey]) {
+    return buildTablePage(title, tablePages[pageKey].cols, tablePages[pageKey].rows, pageKey);
+  }
+
+  // Form-based pages
+  var formPages = {
+    company_info: buildCompanyInfoForm(),
+    company_timezone: buildSimpleForm('Company Time Zone', [
+      {label:'Time Zone', type:'select', options:['Eastern Time (US & Canada)','Central Time (US & Canada)','Mountain Time (US & Canada)','Pacific Time (US & Canada)']},
+      {label:'Date Format', type:'select', options:['MM/DD/YYYY','DD/MM/YYYY','YYYY-MM-DD']},
+      {label:'Time Format', type:'select', options:['12 Hour (AM/PM)','24 Hour']}
+    ]),
+    routing_settings: buildSimpleForm('Routing Settings', [
+      {label:'Default Driver', type:'text', value:'LudmillaM'},
+      {label:'Routing Version', type:'select', options:['V3 (Current)','V2 (Legacy)']},
+      {label:'Auto-assign Drivers', type:'checkbox', value:true},
+      {label:'Show Driver Notes', type:'checkbox', value:true}
+    ]),
+    google_integration: buildSimpleForm('Google Integration Settings', [
+      {label:'Google Calendar ID', type:'text', value:''},
+      {label:'Google Maps API Key', type:'text', value:'AIza...'},
+      {label:'Sync Orders to Calendar', type:'checkbox', value:true},
+      {label:'Show Delivery Routes', type:'checkbox', value:false}
+    ]),
+    quickbooks: buildSimpleForm('Quickbooks Online', [
+      {label:'Status', type:'text', value:'Connected'},
+      {label:'Sync Frequency', type:'select', options:['Real-time','Hourly','Daily']},
+      {label:'Auto-sync Invoices', type:'checkbox', value:true},
+      {label:'Auto-sync Customers', type:'checkbox', value:true}
+    ]),
+    misc_settings: buildSimpleForm('Misc Settings', [
+      {label:'Company Display Name', type:'text', value:"It's Always Fun"},
+      {label:'Default Currency', type:'select', options:['USD - US Dollar','EUR - Euro','CAD - Canadian Dollar']},
+      {label:'Allow Online Payments', type:'checkbox', value:true},
+      {label:'Require Signature', type:'checkbox', value:true},
+      {label:'Send Confirmation Emails', type:'checkbox', value:true}
+    ]),
+    api_info: buildApiInfoPage(),
+    system_settings: buildSimpleForm('System Settings', [
+      {label:'Max Orders Per Day', type:'text', value:'20'},
+      {label:'Default Order Status', type:'select', options:['Active','Pending','Draft']},
+      {label:'Allow Partial Payments', type:'checkbox', value:false},
+      {label:'Enable Online Booking', type:'checkbox', value:true}
+    ]),
+    seo_settings: buildSimpleForm('SEO Settings', [
+      {label:'Meta Title', type:'text', value:"It's Always Fun - Event Rentals"},
+      {label:'Meta Description', type:'textarea', value:'Best bounce house and inflatable rentals in St. Johns, FL'},
+      {label:'Google Analytics ID', type:'text', value:'GA-XXXXXXXXX'},
+      {label:'Facebook Pixel ID', type:'text', value:''}
+    ]),
+    domain_settings: buildSimpleForm('Domain Settings', [
+      {label:'Primary Domain', type:'text', value:'itsalwaysfun.com'},
+      {label:'SSL Certificate', type:'text', value:'Active - Expires 12/2026'},
+      {label:'WWW Redirect', type:'checkbox', value:true},
+      {label:'Custom 404 Page', type:'checkbox', value:false}
+    ]),
+    merge_fields: buildMergeFieldsPage(),
+    highlevel_connect: buildSimpleForm('HighLevel Connect', [
+      {label:'API Key', type:'text', value:'hl_...'},
+      {label:'Location ID', type:'text', value:''},
+      {label:'Sync Contacts', type:'checkbox', value:true},
+      {label:'Sync Opportunities', type:'checkbox', value:false},
+      {label:'Enable SMS via HighLevel', type:'checkbox', value:true}
+    ])
+  };
+
+  if (formPages[pageKey]) {
+    return formPages[pageKey];
+  }
+
+  // Default: generic page
+  return buildGenericPage(title, pageKey);
+}
+
+function buildTablePage(title, cols, rows, pageKey) {
+  var colsHTML = cols.map(function(c){return '<th>'+c+'</th>';}).join('');
+  var rowsHTML = rows.map(function(row){
+    var tds = row.map(function(cell){return '<td>'+cell+'</td>';}).join('');
+    return '<tr>' + tds +
+      '<td class="action-cell">' +
+        '<button class="btn-tbl-edit" onclick="alert(\"Edit: ' + row[0] + '\")"><i class="fa-solid fa-pen"></i></button>' +
+        '<button class="btn-tbl-del" onclick="confirm(\"Delete ' + row[0] + '?\")"><i class="fa-solid fa-trash"></i></button>' +
+      '</td></tr>';
+  }).join('');
+
+  return '<div class="subpage-toolbar">' +
+    '<button class="btn-primary" onclick="alert(\"Add New ' + title + '\")"><i class="fa-solid fa-plus"></i> Add New</button>' +
+    '<button class="btn-secondary" onclick="alert(\"Customize columns\")">Customize</button>' +
+    '<input type="text" class="form-control search-inline" placeholder="Search..." oninput="filterSubpageTable(this)">' +
+    '<button class="btn-icon-search"><i class="fa-solid fa-magnifying-glass"></i></button>' +
+    '<span class="record-count">1 - ' + rows.length + ' of ' + rows.length + ' records</span>' +
+  '</div>' +
+  '<table class="subpage-table" id="subpage_table">' +
+    '<thead><tr><th></th>' + colsHTML + '<th>Actions</th></tr></thead>' +
+    '<tbody>' + rowsHTML + '</tbody>' +
+  '</table>';
+}
+
+function filterSubpageTable(input) {
+  var val = input.value.toLowerCase();
+  var rows = document.querySelectorAll('#subpage_table tbody tr');
+  rows.forEach(function(row){
+    row.style.display = row.textContent.toLowerCase().includes(val) ? '' : 'none';
+  });
+}
+
+function buildCompanyInfoForm() {
+  return '<form class="settings-form" onsubmit="return false;">' +
+    '<div class="form-section"><h4>Company Information</h4>' +
+    '<div class="form-row"><div class="form-group"><label>Company Name</label><input type="text" class="form-control" value="Its Always Fun"></div>' +
+    '<div class="form-group"><label>Phone</label><input type="text" class="form-control" value="904-429-9945"></div></div>' +
+    '<div class="form-row"><div class="form-group"><label>Email</label><input type="email" class="form-control" value="info@itsalwaysfun.com"></div>' +
+    '<div class="form-group"><label>Website</label><input type="text" class="form-control" value="www.itsalwaysfun.com"></div></div>' +
+    '</div>' +
+    '<div class="form-section"><h4>Address</h4>' +
+    '<div class="form-group"><label>Street Address</label><input type="text" class="form-control" value="92 Life Spring Way"></div>' +
+    '<div class="form-row"><div class="form-group"><label>City</label><input type="text" class="form-control" value="Saint Johns"></div>' +
+    '<div class="form-group"><label>State</label><input type="text" class="form-control" value="FL"></div>' +
+    '<div class="form-group"><label>Zip</label><input type="text" class="form-control" value="32259"></div></div>' +
+    '</div>' +
+    '<div class="form-section"><h4>Branding</h4>' +
+    '<div class="form-group"><label>Logo URL</label><input type="text" class="form-control" value="https://itsalwaysfun.ourers.com/images/logo.png"></div>' +
+    '<div class="form-group"><label>Primary Color</label><input type="color" class="form-control" value="#17a589" style="height:40px"></div>' +
+    '</div>' +
+    '<button type="submit" class="btn-primary" onclick="alert(\"Settings saved!\")">Save Changes</button>' +
+    '</form>';
+}
+
+function buildSimpleForm(title, fields) {
+  var html = '<form class="settings-form" onsubmit="return false;"><div class="form-section">';
+  fields.forEach(function(f){
+    html += '<div class="form-group"><label>' + f.label + '</label>';
+    if (f.type === 'select') {
+      html += '<select class="form-control">' + f.options.map(function(o){return '<option>'+o+'</option>';}).join('') + '</select>';
+    } else if (f.type === 'checkbox') {
+      html += '<label class="toggle-switch"><input type="checkbox"' + (f.value?' checked':'') + '><span class="toggle-slider"></span></label>';
+    } else if (f.type === 'textarea') {
+      html += '<textarea class="form-control" rows="3">' + (f.value||'') + '</textarea>';
+    } else {
+      html += '<input type="' + f.type + '" class="form-control" value="' + (f.value||'') + '">';
+    }
+    html += '</div>';
+  });
+  html += '</div><button type="submit" class="btn-primary" onclick="alert(\"Settings saved!\")">Save Changes</button></form>';
+  return html;
+}
+
+function buildApiInfoPage() {
+  return '<div class="api-info-panel">' +
+    '<div class="api-key-card"><h4>API Key</h4><div class="api-key-display"><code id="api_key_val">sk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>' +
+    '<button class="btn-icon" onclick="alert(\"API key copied!\")"><i class="fa-solid fa-copy"></i></button>' +
+    '<button class="btn-danger-sm" onclick="confirm(\"Regenerate API key? This will invalidate the current key.\")">Regenerate</button></div>' +
+    '<p class="api-note">Use this key to authenticate API requests. Keep it secret.</p></div>' +
+    '<div class="api-endpoints"><h4>Available Endpoints</h4>' +
+    '<table class="subpage-table"><thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>' +
+    '<tbody>' +
+    '<tr><td><span class="badge-get">GET</span></td><td><code>/api/orders</code></td><td>List all orders</td></tr>' +
+    '<tr><td><span class="badge-post">POST</span></td><td><code>/api/orders</code></td><td>Create new order</td></tr>' +
+    '<tr><td><span class="badge-get">GET</span></td><td><code>/api/customers</code></td><td>List customers</td></tr>' +
+    '<tr><td><span class="badge-post">POST</span></td><td><code>/api/customers</code></td><td>Create customer</td></tr>' +
+    '<tr><td><span class="badge-get">GET</span></td><td><code>/api/products</code></td><td>List products</td></tr>' +
+    '</tbody></table></div></div>';
+}
+
+function buildMergeFieldsPage() {
+  var fields = [
+    ['{{customer_name}}','Customer full name'],['{{customer_email}}','Customer email'],
+    ['{{order_number}}','Order number'],['{{order_date}}','Event date'],
+    ['{{order_total}}','Order total amount'],['{{company_name}}','Your company name'],
+    ['{{company_phone}}','Your company phone'],['{{event_address}}','Event location address'],
+    ['{{products_list}}','List of rented products'],['{{payment_due}}','Payment due amount']
+  ];
+  return '<div class="merge-fields-panel"><p class="merge-intro">Use these merge fields in your email templates, contracts, and documents:</p>' +
+    '<table class="subpage-table"><thead><tr><th>Field Code</th><th>Description</th><th></th></tr></thead><tbody>' +
+    fields.map(function(f){
+      return '<tr><td><code>' + f[0] + '</code></td><td>' + f[1] + '</td>' +
+        '<td><button class="btn-copy-field" onclick="alert(\"Copied: ' + f[0] + '\")"><i class="fa-solid fa-copy"></i> Copy</button></td></tr>';
+    }).join('') +
+    '</tbody></table></div>';
+}
+
+function buildGenericPage(title, pageKey) {
+  return '<div class="generic-page-content">' +
+    '<div class="generic-page-icon"><i class="fa-solid fa-gear fa-3x" style="color:#17a589"></i></div>' +
+    '<h3>' + title + '</h3>' +
+    '<p>Configure your ' + title.toLowerCase() + ' settings here.</p>' +
+    '<form class="settings-form" onsubmit="return false;"><div class="form-section">' +
+    '<div class="form-group"><label>Name</label><input type="text" class="form-control" placeholder="Enter name..."></div>' +
+    '<div class="form-group"><label>Description</label><textarea class="form-control" rows="3" placeholder="Description..."></textarea></div>' +
+    '<div class="form-group"><label>Status</label><select class="form-control"><option>Active</option><option>Inactive</option></select></div>' +
+    '</div>' +
+    '<button type="submit" class="btn-primary" onclick="alert(\"Saved!\")">Save</button> ' +
+    '<button type="button" class="btn-secondary" onclick="closeAdminPage()">Cancel</button>' +
+    '</form></div>';
+}
