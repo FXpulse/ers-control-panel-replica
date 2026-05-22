@@ -1,533 +1,382 @@
-/* ERS Control Panel - app.js */
+// ERS Control Panel - Full Interactive JavaScript
 
-// ===== GLOBAL STATE =====
-var currentYear = 2026;
-var currentMonth = 4; // 0-indexed: 4 = May
-var monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-var dayNames = ["S","M","T","W","T","F","S"];
-
-// Sample orders data
-var ordersData = {
-  "2026-05-08": [{type:"delivery", count:1}],
-  "2026-05-09": [{type:"delivery", count:1}],
-  "2026-05-10": [{type:"active", count:1}],
-  "2026-05-11": [{type:"active", count:1}],
-  "2026-05-12": [{type:"active", count:1}],
-  "2026-05-13": [{type:"active", count:1}],
-  "2026-05-14": [{type:"active", count:1}],
-  "2026-05-15": [{type:"active", count:1}],
-  "2026-05-16": [{type:"active", count:1}],
-  "2026-05-17": [{type:"active", count:1}],
-  "2026-05-18": [{type:"pickup", count:1}],
-  "2026-05-19": [{type:"active", count:1}],
-  "2026-05-25": [{type:"holiday", count:0}]
-};
-
-var holidays = {
-  "2026-05-08": "Truman Day",
-  "2026-05-25": "Memorial Day"
-};
-
-// ===== TAB SWITCHING =====
-function switchTab(tabName, clickedEl) {
-  // Update navbar active state
-  var tabs = document.querySelectorAll('#ers_navbar_tabs li');
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].classList.remove('active');
-  }
-  if (clickedEl) clickedEl.classList.add('active');
-
-  // Hide all tab content
-  var contents = document.querySelectorAll('.tab_content');
-  for (var i = 0; i < contents.length; i++) {
-    contents[i].style.display = 'none';
-    contents[i].classList.remove('active_tab');
-  }
-
-  // Show selected tab
-  var target = document.getElementById('tab_' + tabName);
-  if (target) {
-    target.style.display = 'block';
-    target.classList.add('active_tab');
-  }
-
-  // Show/hide admin subnav
-  var adminSubnav = document.getElementById('admin_subnav');
-  if (adminSubnav) {
-    adminSubnav.style.display = (tabName === 'admin') ? 'flex' : 'none';
-  }
-
-  // Render secondary calendars if needed
-  if (tabName === 'scheduling') {
-    renderSecondaryCalendar('sched-grid', 'sched_month_label', 'sched_prev', 'sched_next');
-  }
-  if (tabName === 'delivery') {
-    renderSecondaryCalendar('del-grid', 'del_month_label', 'del_prev', 'del_next');
-  }
-  if (tabName === 'reports') {
-    renderReportsCharts();
-  }
+// =================== TAB SWITCHING ===================
+function switchTab(tabName, el) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#ers_navbar_tabs li').forEach(li => li.classList.remove('active'));
+  const panel = document.getElementById('tab_' + tabName);
+  if (panel) panel.classList.add('active');
+  if (el) el.classList.add('active');
+  const subnav = document.getElementById('admin_subnav');
+  if (subnav) subnav.style.display = tabName === 'admin' ? 'flex' : 'none';
+  if (tabName === 'reports') setTimeout(renderReportsCharts, 100);
+  if (tabName === 'home') setTimeout(function(){ renderHomeCalendar(); renderHomeBestSellers(); renderHomeMonthly(); }, 100);
+  if (tabName === 'scheduling') setTimeout(renderSchedCalendar, 100);
+  if (tabName === 'delivery') setTimeout(renderDeliveryCalendar, 100);
+  if (tabName === 'customers') renderCustomersTable();
 }
 
-// ===== ADMIN SUBNAV DROPDOWN TOGGLE =====
+// =================== SUBNAV DROPDOWNS ===================
 function toggleGroup(btn) {
-  var linksDiv = btn.nextElementSibling;
-  if (linksDiv) {
-    var isOpen = linksDiv.classList.contains('open');
-    // Close all others
-    var allLinks = document.querySelectorAll('.subnav_group_links');
-    for (var i = 0; i < allLinks.length; i++) {
-      allLinks[i].classList.remove('open');
-    }
-    if (!isOpen) linksDiv.classList.add('open');
-  }
+  const group = btn.closest ? btn.closest('.subnav_group') : btn.parentElement;
+  const links = group.querySelector('.subnav_group_links');
+  const allLinks = document.querySelectorAll('.subnav_group_links');
+  allLinks.forEach(function(l) { if (l !== links) l.style.display = 'none'; });
+  links.style.display = links.style.display === 'block' ? 'none' : 'block';
 }
 
-// Close dropdowns when clicking outside
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.subnav_group')) {
-    var allLinks = document.querySelectorAll('.subnav_group_links');
-    for (var i = 0; i < allLinks.length; i++) {
-      allLinks[i].classList.remove('open');
-    }
-  }
-});
+// =================== MODAL SYSTEM ===================
+function openModal(id) {
+  document.getElementById('modal_overlay').style.display = 'block';
+  document.getElementById(id).style.display = 'block';
+}
+function closeModal() {
+  document.getElementById('modal_overlay').style.display = 'none';
+  document.querySelectorAll('.ers-modal').forEach(m => m.style.display = 'none');
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
 
-// ===== CALENDAR RENDERING =====
-function renderCalendar(year, month, gridId, labelId) {
-  gridId = gridId || 'calendar-grid';
-  labelId = labelId || 'calendar_month_display';
+// =================== CALENDAR DATA ===================
+var calOrders = {
+  '2026-05-08': [{id:43, type:'delivery', label:'DEL', customer:'Creekside Christian Preschool', products:'Fire Fighter Station x1, Unicorn Dreamland x1', time:'Fri May 08, 2026 9:00am-1:30pm', total:475, paid:true, contact:'Mrs. Tanya Bagwell', email:'preschool@creeksidechristian.com', phone:'904-429-9945', address:'92 Life Spring Way, Saint Johns FL 32259'}],
+  '2026-05-09': [{id:44, type:'delivery', label:'DEL', customer:'Il Murali', products:'Bounce House x1', time:'Sat May 09, 2026 10:00am-4:00pm', total:350, paid:true, contact:'Il Murali', email:'admin@ilmurali.com', phone:'866-884-7494', address:'123 Main St, St. Johns, FL'}],
+  '2026-05-10': [{id:45, type:'service', label:'1', customer:'Abby Weiss', products:'Bounce & Slide x1', time:'Sun May 10, 2026 2:00pm-6:00pm', total:275, paid:false, contact:'Abby Weiss', email:'abby.weiss@acesschurch.com', phone:'904-647-1200', address:'Access Church, St. Johns, FL'}],
+  '2026-05-11': [{id:46, type:'service', label:'1', customer:'Henry Nardone', products:'Dry Slide x1', time:'Mon May 11, 2026 11:00am-3:00pm', total:225, paid:true, contact:'Henry Nardone', email:'ludmilayhenry@gmail.com', phone:'786-307-2711', address:'Miami, FL'}],
+  '2026-05-12': [{id:47, type:'service', label:'1', customer:'Monique Buchanan', products:'Water Slide x1', time:'Tue May 12, 2026 1:00pm-5:00pm', total:300, paid:false, contact:'Monique Buchanan', email:'mbuchanan@primrosejuling.com', phone:'904-230-2828', address:'Primrose School, St. Johns, FL'}],
+  '2026-05-13': [{id:48, type:'service', label:'1', customer:'Abby Weiss', products:'Bounce House x1', time:'Wed May 13, 2026 3:00pm-7:00pm', total:250, paid:true, contact:'Abby Weiss', email:'abby.weiss@acesschurch.com', phone:'904-647-1200', address:'Access Church, St. Johns, FL'}],
+  '2026-05-14': [{id:49, type:'service', label:'1', customer:'test ers', products:'Combo Unit x1', time:'Thu May 14, 2026 2:00pm-6:00pm', total:400, paid:false, contact:'test ers', email:'junk@eventrentalsystems.com', phone:'123-456-7890', address:'Test Location, FL'}],
+  '2026-05-15': [{id:50, type:'service', label:'1', customer:'Roderick Pitti', products:'Bounce House x1', time:'Fri May 15, 2026 4:00pm-8:00pm', total:275, paid:true, contact:'Roderick Pitti', email:'roderick.pitti@fxtradeelite.com', phone:'+507-635-597-22', address:'Social Click Media, FL'}],
+  '2026-05-16': [{id:51, type:'service', label:'1', customer:'Ludmila Mendoza', products:'Slide x1', time:'Sat May 16, 2026 10:00am-2:00pm', total:325, paid:false, contact:'Ludmila Mendoza', email:'ludmilafernandamendoza@...', phone:'', address:'St. Johns, FL'}],
+  '2026-05-17': [{id:52, type:'service', label:'1', customer:'Creekside Christian', products:'Fire Fighter Station x1', time:'Sun May 17, 2026 9:00am-1:00pm', total:450, paid:true, contact:'Mrs. Tanya Bagwell', email:'preschool@creeksidechristian.com', phone:'904-429-9945', address:'92 Life Spring Way, Saint Johns FL 32259'}],
+  '2026-05-18': [{id:53, type:'pickup', label:'PKP', customer:'Abby Weiss', products:'Bounce House Pickup', time:'Mon May 18, 2026 9:00am-11:00am', total:0, paid:true, contact:'Abby Weiss', email:'abby.weiss@acesschurch.com', phone:'904-647-1200', address:'Access Church, St. Johns, FL'}],
+  '2026-05-19': [{id:54, type:'service', label:'1', customer:'Henry Nardone', products:'Dry Slide x1', time:'Tue May 19, 2026 2:00pm-6:00pm', total:225, paid:true, contact:'Henry Nardone', email:'ludmilayhenry@gmail.com', phone:'786-307-2711', address:'Miami, FL'}],
+  '2026-05-25': [{id:55, type:'holiday', label:'*', customer:'Memorial Day', products:'Holiday', time:'Mon May 25, 2026', total:0, paid:true, contact:'', email:'', phone:'', address:''}]
+};
 
-  var grid = document.getElementById(gridId);
-  if (!grid) return;
+var homeMonth = {y:2026, m:4}; // 0-indexed: 4=May
+var schedMonth = {y:2026, m:4};
+var deliveryMonth = {y:2026, m:4};
 
-  var label = document.getElementById(labelId);
-  if (label) label.textContent = monthNames[month] + ' ' + year;
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-  var firstDay = new Date(year, month, 1).getDay();
-  var daysInMonth = new Date(year, month + 1, 0).getDate();
+function getDateKey(y, m, d) {
+  return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+}
+
+// =================== HOME CALENDAR ===================
+function changeHomeMonth(dir) {
+  homeMonth.m += dir;
+  if (homeMonth.m > 11) { homeMonth.m = 0; homeMonth.y++; }
+  if (homeMonth.m < 0)  { homeMonth.m = 11; homeMonth.y--; }
+  renderHomeCalendar();
+}
+
+function renderHomeCalendar() {
+  var el = document.getElementById('home_cal_grid');
+  var lbl = document.getElementById('home_month_label');
+  if (!el) return;
+  lbl.textContent = MONTHS[homeMonth.m] + ' ' + homeMonth.y;
+  el.innerHTML = buildCalendarHTML(homeMonth.y, homeMonth.m, 'showHomeOrder');
+}
+
+function showHomeOrder(dateKey) {
+  var orders = calOrders[dateKey];
+  if (!orders || orders.length === 0) return;
+  var o = orders[0];
+  showOrderModal(o);
+}
+
+// =================== SCHEDULING CALENDAR ===================
+function changeSchedMonth(dir) {
+  schedMonth.m += dir;
+  if (schedMonth.m > 11) { schedMonth.m = 0; schedMonth.y++; }
+  if (schedMonth.m < 0)  { schedMonth.m = 11; schedMonth.y--; }
+  renderSchedCalendar();
+}
+
+function renderSchedCalendar() {
+  var el = document.getElementById('sched_cal_grid');
+  var lbl = document.getElementById('sched_month_label');
+  if (!el) return;
+  lbl.textContent = MONTHS[schedMonth.m] + ' ' + schedMonth.y;
+  el.innerHTML = buildCalendarHTML(schedMonth.y, schedMonth.m, 'showSchedOrder');
+}
+
+function showSchedOrder(dateKey) {
+  var orders = calOrders[dateKey];
+  var detail = document.getElementById('sched_order_detail');
+  if (!orders || orders.length === 0) { detail.style.display='none'; return; }
+  var o = orders[0];
+  detail.style.display = 'block';
+  detail.innerHTML = buildOrderDetailHTML(o);
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// =================== DELIVERY CALENDAR ===================
+function changeDeliveryMonth(dir) {
+  deliveryMonth.m += dir;
+  if (deliveryMonth.m > 11) { deliveryMonth.m = 0; deliveryMonth.y++; }
+  if (deliveryMonth.m < 0)  { deliveryMonth.m = 11; deliveryMonth.y--; }
+  renderDeliveryCalendar();
+}
+
+function renderDeliveryCalendar() {
+  var el = document.getElementById('delivery_cal_grid');
+  var lbl = document.getElementById('delivery_month_label');
+  if (!el) return;
+  lbl.textContent = MONTHS[deliveryMonth.m] + ' ' + deliveryMonth.y;
+  el.innerHTML = buildCalendarHTML(deliveryMonth.y, deliveryMonth.m, 'showDeliveryOrder');
+}
+
+function showDeliveryOrder(dateKey) {
+  var orders = calOrders[dateKey];
+  var detail = document.getElementById('delivery_order_detail');
+  if (!orders || orders.length === 0) { detail.style.display='none'; return; }
+  var o = orders[0];
+  detail.style.display = 'block';
+  detail.innerHTML = buildOrderDetailHTML(o);
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// =================== SHARED CALENDAR BUILDER ===================
+function buildCalendarHTML(y, m, clickFn) {
   var today = new Date();
-
+  var firstDay = new Date(y, m, 1).getDay();
+  var daysInMonth = new Date(y, m+1, 0).getDate();
   var html = '';
-
-  // Fill header row if needed
-  var headId = gridId.replace('grid', 'grid-head');
-  var headEl = document.getElementById(headId);
-  if (headEl && headEl.innerHTML === '') {
-    var headHtml = '';
-    dayNames.forEach(function(d) { headHtml += '<th>' + d + '</th>'; });
-    headEl.innerHTML = headHtml;
-  }
-
-  var dayCount = firstDay;
-  html += '<tr>';
-
-  // Empty cells before first day
-  for (var i = 0; i < firstDay; i++) {
-    html += '<td class="cal_other_month"></td>';
-  }
-
-  for (var d = 1; d <= daysInMonth; d++) {
-    if (dayCount % 7 === 0 && d > 1) html += '</tr><tr>';
-
-    var dateKey = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-    var isToday = (today.getFullYear() === year && today.getMonth() === month && today.getDate() === d);
-    var cellClass = isToday ? 'cal_today' : '';
-    var isHoliday = holidays[dateKey];
-    if (isHoliday) cellClass += ' cal_holiday';
-
-    var events = ordersData[dateKey] || [];
-    var eventsHtml = '';
-    if (isHoliday) {
-      eventsHtml += '<span class="cal_holiday_icon">&#9728;</span> ';
+  var day = 1;
+  for (var row = 0; row < 6; row++) {
+    html += '<tr>';
+    for (var col = 0; col < 7; col++) {
+      var cellNum = row * 7 + col;
+      if (cellNum < firstDay || day > daysInMonth) {
+        html += '<td class="cal-empty"></td>';
+      } else {
+        var dateKey = getDateKey(y, m, day);
+        var orders = calOrders[dateKey] || [];
+        var isToday = (y === today.getFullYear() && m === today.getMonth() && day === today.getDate());
+        var cellClass = 'cal-day' + (isToday ? ' cal-today' : '');
+        html += '<td class="' + cellClass + '" onclick="' + clickFn + '(\'' + dateKey + '\')">';
+        html += '<div class="cal-day-num">' + day + '</div>';
+        orders.forEach(function(o) {
+          var color = o.type==='delivery'?'#1d6b44': o.type==='pickup'?'#ed7d31': o.type==='holiday'?'#ffd966':'#4472c4';
+          html += '<div class="cal-event" style="background:' + color + '">' + o.label + '</div>';
+        });
+        html += '</td>';
+        day++;
+      }
     }
-    events.forEach(function(ev) {
-      var cls = 'cal_event cal_event_' + ev.type;
-      var label = ev.type === 'delivery' ? 'DEL' : ev.type === 'pickup' ? 'PKP' : ev.type === 'active' ? ev.count : '';
-      if (ev.count > 0) eventsHtml += '<span class="' + cls + '">' + label + '</span>';
-    });
-
-    html += '<td class="' + cellClass + '">';
-    html += '<a href="#" class="cal_day_num">' + d + '</a>';
-    html += eventsHtml;
-    html += '</td>';
-    dayCount++;
+    html += '</tr>';
+    if (day > daysInMonth) break;
   }
-
-  // Fill remaining cells
-  var remaining = 7 - (dayCount % 7);
-  if (remaining < 7) {
-    for (var i = 0; i < remaining; i++) {
-      html += '<td class="cal_other_month"></td>';
-    }
-  }
-  html += '</tr>';
-
-  grid.innerHTML = html;
+  return html;
 }
 
-function renderSecondaryCalendar(gridId, labelId, prevId, nextId) {
-  renderCalendar(currentYear, currentMonth, gridId, labelId);
-
-  var prevBtn = document.getElementById(prevId);
-  var nextBtn = document.getElementById(nextId);
-
-  if (prevBtn && !prevBtn._ersListener) {
-    prevBtn._ersListener = true;
-    prevBtn.addEventListener('click', function() {
-      currentMonth--;
-      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-      renderCalendar(currentYear, currentMonth, gridId, labelId);
-    });
-  }
-  if (nextBtn && !nextBtn._ersListener) {
-    nextBtn._ersListener = true;
-    nextBtn.addEventListener('click', function() {
-      currentMonth++;
-      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-      renderCalendar(currentYear, currentMonth, gridId, labelId);
-    });
-  }
+// =================== ORDER DETAIL BUILDER ===================
+function buildOrderDetailHTML(o) {
+  var paidClass = o.paid ? 'badge-paid' : 'badge-unpaid';
+  var paidLabel = o.paid ? 'Paid in Full' : 'Pending Payment';
+  return '<div class="order-detail">' +
+    '<div class="order-detail-header order-header-green">Order #' + o.id + '</div>' +
+    '<div class="order-detail-body">' +
+      '<div class="order-detail-left">' +
+        '<div class="order-products">' + o.products + '</div>' +
+        '<div><span class="' + paidClass + '">' + paidLabel + '</span></div>' +
+        (o.total > 0 ? '<div class="order-total"><span class="badge-amount">$' + o.total.toFixed(2) + ' (paid)</span></div>' : '') +
+        '<button class="btn-add-notes" onclick="alert('Add notes to Order #' + o.id + '')" style="margin-top:10px">Add Notes</button>' +
+      '</div>' +
+      '<div class="order-detail-right">' +
+        '<div>' + o.time + '</div>' +
+        '<div class="order-customer-name">' + o.customer + '</div>' +
+        (o.contact ? '<div>' + o.contact + '</div>' : '') +
+        (o.email ? '<div><a href="mailto:' + o.email + '">' + o.email + '</a></div>' : '') +
+        (o.phone ? '<div><a href="tel:' + o.phone + '">' + o.phone + '</a></div>' : '') +
+        (o.address ? '<div>' + o.address + '</div>' : '') +
+      '</div>' +
+    '</div>' +
+    '<div class="order-actions">' +
+      '<button onclick="alert('View Customer')" title="Customer"><i class="fa-solid fa-user"></i></button>' +
+      '<button onclick="alert('Process Payment')" title="Payment" class="btn-green"><i class="fa-solid fa-dollar-sign"></i></button>' +
+      '<button onclick="alert('View Contract')" title="Contract"><i class="fa-solid fa-file-contract"></i></button>' +
+      '<button onclick="alert('View Invoice')" title="Invoice"><i class="fa-solid fa-file-invoice"></i></button>' +
+      '<button onclick="alert('View Products')" title="Products"><i class="fa-solid fa-boxes-stacked"></i></button>' +
+      '<button onclick="alert('Settings')" title="Settings"><i class="fa-solid fa-gear"></i></button>' +
+    '</div>' +
+  '</div>';
 }
 
-// ===== HIGHCHARTS - HOME ===== 
-function renderMonthlyChart() {
-  if (typeof Highcharts === 'undefined') return;
-  var el = document.getElementById('monthly_chart_container');
-  if (!el) return;
-  Highcharts.chart('monthly_chart_container', {
-    chart: { type: 'bar', style: { fontFamily: 'Segoe UI, Arial, sans-serif' } },
-    title: { text: 'Monthly Payments Received', style: { fontSize: '13px', fontWeight: '600' } },
-    xAxis: { categories: ['Mar 26'], labels: { style: { fontSize: '11px' } } },
-    yAxis: { title: { text: 'Values', style: { fontSize: '11px' } }, min: 0, max: 500, labels: { style: { fontSize: '11px' } } },
-    series: [{ name: 'Payments', data: [475], color: '#3a7bd5', showInLegend: false }],
-    credits: { enabled: false },
-    plotOptions: { bar: { dataLabels: { enabled: false } } }
+function showOrderModal(o) {
+  document.getElementById('modal_order_title').textContent = 'Order #' + o.id;
+  document.getElementById('modal_order_body').innerHTML = buildOrderDetailHTML(o);
+  openModal('order_modal');
+}
+
+// =================== CUSTOMERS DATA & TABLE ===================
+var customersData = [
+  {name:'Il Murali', email:'admin@ilmurali.com', phone:'866-884-7494', company:'', complete:0, last:'', upcoming:0, nextOrder:'', quotes:0, nextQuote:''},
+  {name:'Monique Buchanan', email:'mbuchanan@primrosejuling.com', phone:'904-230-2828', company:'Primrose School of Julington Creek', complete:0, last:'', upcoming:0, nextOrder:'', quotes:0, nextQuote:''},
+  {name:'Abby Weiss', email:'abby.weiss@acesschurch.com', phone:'904-647-1200', company:'Access Church', complete:1, last:'03/29/2026', upcoming:0, nextOrder:'', quotes:0, nextQuote:''},
+  {name:'Mrs. Tanya Bagwell', email:'preschool@creeksidechristian.com', phone:'904-429-9945', company:'Creekside Christian Preschool', complete:1, last:'05/08/2026', upcoming:0, nextOrder:'', quotes:0, nextQuote:''},
+  {name:'Abby Weiss', email:'ludmilafernandamendoza@...', phone:'', company:'Access Church', complete:0, last:'', upcoming:0, nextOrder:'', quotes:0, nextQuote:''},
+  {name:'Ludmila Mendoza', email:'ludmilafernandamendoza@...', phone:'', company:'', complete:0, last:'', upcoming:0, nextOrder:'', quotes:0, nextQuote:''},
+  {name:'Henry Nardone', email:'ludmilayhenry@gmail.com', phone:'786-307-2711', company:'', complete:2, last:'05/09/2026', upcoming:0, nextOrder:'', quotes:0, nextQuote:''},
+  {name:'test ers', email:'junk@eventrentalsystems.com', phone:'123-456-7890', company:'', complete:0, last:'', upcoming:0, nextOrder:'', quotes:0, nextQuote:''},
+  {name:'Roderick Pitti', email:'roderick.pitti@fxtradeelite.com', phone:'+507-635-597-22', company:'Social Click Media', complete:0, last:'', upcoming:0, nextOrder:'', quotes:0, nextQuote:''}
+];
+
+var filteredCustomers = customersData.slice();
+var sortDir = {};
+
+function renderCustomersTable() {
+  var tbody = document.getElementById('customers_tbody');
+  if (!tbody) return;
+  tbody.innerHTML = filteredCustomers.map(function(c) {
+    return '<tr>' +
+      '<td><i class="fa-solid fa-circle-user" style="color:#17a589;font-size:1.4rem"></i></td>' +
+      '<td><a href="#" onclick="openCustomerDetail(\'' + c.name + '\');return false;">' + c.name + '</a></td>' +
+      '<td>' + (c.email.length>28?c.email.substring(0,26)+'...':c.email) + '</td>' +
+      '<td>' + c.phone + '</td>' +
+      '<td>' + c.company + '</td>' +
+      '<td>' + (c.complete > 0 ? '<span class="badge-complete">' + c.complete + '</span>' : c.complete) + '</td>' +
+      '<td>' + c.last + '</td>' +
+      '<td>' + c.upcoming + '</td>' +
+      '<td>' + c.nextOrder + '</td>' +
+      '<td>' + c.quotes + '</td>' +
+      '<td>' + c.nextQuote + '</td>' +
+      '<td><button class="btn-new-quote" onclick="alert('New Quote for ' + c.name + '')">New Quote</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function openCustomerDetail(name) {
+  var c = customersData.find(function(x){return x.name===name;});
+  if (!c) return;
+  document.getElementById('modal_order_title').textContent = c.name;
+  document.getElementById('modal_order_body').innerHTML =
+    '<div class="customer-detail">' +
+    '<p><strong>Email:</strong> ' + c.email + '</p>' +
+    '<p><strong>Phone:</strong> ' + c.phone + '</p>' +
+    '<p><strong>Company:</strong> ' + (c.company||'—') + '</p>' +
+    '<p><strong>Complete Orders:</strong> ' + c.complete + '</p>' +
+    '<p><strong>Last Order:</strong> ' + (c.last||'—') + '</p>' +
+    '<div style="margin-top:15px">' +
+      '<button class="btn-primary" onclick="closeModal()">New Quote</button> ' +
+      '<button class="btn-secondary" onclick="closeModal()">Send ERSMail</button>' +
+    '</div></div>';
+  openModal('order_modal');
+}
+
+function filterCustomers() {
+  var name = (document.getElementById('filter_name')||{}).value||'';
+  var email = (document.getElementById('filter_email')||{}).value||'';
+  var phone = (document.getElementById('filter_phone')||{}).value||'';
+  var company = (document.getElementById('filter_company')||{}).value||'';
+  filteredCustomers = customersData.filter(function(c) {
+    return (!name || c.name.toLowerCase().includes(name.toLowerCase())) &&
+           (!email || c.email.toLowerCase().includes(email.toLowerCase())) &&
+           (!phone || c.phone.includes(phone)) &&
+           (!company || c.company.toLowerCase().includes(company.toLowerCase()));
   });
+  renderCustomersTable();
 }
 
-function renderBestSellersChart() {
-  if (typeof Highcharts === 'undefined') return;
-  var el = document.getElementById('chart_container');
-  if (!el) return;
-  Highcharts.chart('chart_container', {
-    chart: { type: 'pie', style: { fontFamily: 'Segoe UI, Arial, sans-serif' } },
-    title: { text: 'Best Sellers over the past 60 days', style: { fontSize: '13px', fontWeight: '600' } },
-    series: [{
-      name: 'Orders',
-      innerSize: '40%',
-      data: [
-        { name: 'Bounce Houses', y: 45, color: '#27ae60' },
-        { name: 'Dry Slides', y: 20, color: '#2c3e50' },
-        { name: 'Bounce & Slide Combos', y: 15, color: '#3498db' },
-        { name: 'Hidden Category', y: 10, color: '#e67e22' }
-      ]
-    }],
-    credits: { enabled: false },
-    plotOptions: { pie: { dataLabels: { enabled: true, style: { fontSize: '11px' } } } }
+function clearFilters() {
+  ['filter_name','filter_email','filter_phone','filter_company'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.value = '';
   });
+  filteredCustomers = customersData.slice();
+  renderCustomersTable();
 }
 
-// ===== HIGHCHARTS - REPORTS ===== 
+function toggleFilters() {
+  var p = document.getElementById('filters_panel');
+  if (p) p.style.display = p.style.display==='none'?'block':'none';
+}
+
+function sortCustomers(field) {
+  sortDir[field] = !sortDir[field];
+  filteredCustomers.sort(function(a,b){
+    var va = String(a[field]||'').toLowerCase();
+    var vb = String(b[field]||'').toLowerCase();
+    return sortDir[field] ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+  renderCustomersTable();
+}
+
+// =================== REPORTS CHARTS ===================
 function renderReportsCharts() {
   if (typeof Highcharts === 'undefined') return;
-
-  var rPie = document.getElementById('reports_pie');
-  if (rPie && !rPie._rendered) {
-    rPie._rendered = true;
-    Highcharts.chart('reports_pie', {
-      chart: { type: 'pie', style: { fontFamily: 'Segoe UI, Arial, sans-serif' } },
-      title: { text: null },
-      series: [{ name: 'Orders', innerSize: '40%', data: [
-        { name: 'Bounce Houses', y: 45, color: '#27ae60' },
-        { name: 'Dry Slides', y: 20, color: '#2c3e50' },
-        { name: 'Bounce & Slide Combos', y: 15, color: '#3498db' },
-        { name: 'Hidden Category', y: 10, color: '#e67e22' }
-      ]}],
-      credits: { enabled: false },
-      plotOptions: { pie: { dataLabels: { enabled: true, style: { fontSize: '11px' } } } }
+  var bs = document.getElementById('rpt_best_sellers');
+  if (bs && !bs._hc) {
+    bs._hc = true;
+    Highcharts.chart('rpt_best_sellers', {
+      chart:{type:'pie', backgroundColor:'#fff'},
+      title:{text:'Best Sellers over the past 60 days', style:{fontSize:'13px'}},
+      series:[{name:'Orders', colorByPoint:true, data:[
+        {name:'Bounce & Slide', y:12}, {name:'Dry Slides', y:8},
+        {name:'Bounce Houses', y:15}, {name:'Water Slides', y:6}, {name:'Combo Units', y:4}
+      ]}], credits:{enabled:false}
     });
   }
+  var rmy = document.getElementById('rpt_monthly');
+  if (rmy && !rmy._hc) {
+    rmy._hc = true;
+    Highcharts.chart('rpt_monthly', {
+      chart:{type:'bar', backgroundColor:'#fff'},
+      title:{text:'Monthly Payments Received', style:{fontSize:'13px'}},
+      xAxis:{categories:['Mar 26']},
+      yAxis:{title:{text:'Values'}, min:0, max:500},
+      series:[{name:'Payments', data:[475], color:'#4472c4'}],
+      credits:{enabled:false}
+    });
+  }
+  var remp = document.getElementById('rpt_employee');
+  if (remp && !remp._hc) {
+    remp._hc = true;
+    var nodata = remp.querySelector('.no-data');
+    if (nodata) nodata.style.display = 'flex';
+  }
+}
 
-  var rBar = document.getElementById('reports_bar');
-  if (rBar && !rBar._rendered) {
-    rBar._rendered = true;
-    Highcharts.chart('reports_bar', {
-      chart: { type: 'bar', style: { fontFamily: 'Segoe UI, Arial, sans-serif' } },
-      title: { text: null },
-      xAxis: { categories: ['Mar 26'] },
-      yAxis: { title: { text: 'Values' }, min: 0, max: 500 },
-      series: [{ name: 'Payments', data: [475], color: '#3a7bd5', showInLegend: false }],
-      credits: { enabled: false }
+// =================== HOME CHARTS ===================
+function renderHomeBestSellers() {
+  if (typeof Highcharts === 'undefined') return;
+  var el = document.getElementById('home_best_sellers_chart');
+  if (el && !el._hc) {
+    el._hc = true;
+    Highcharts.chart('home_best_sellers_chart', {
+      chart:{type:'pie', backgroundColor:'transparent', margin:[0,0,0,0]},
+      title:{text:''},
+      plotOptions:{pie:{dataLabels:{enabled:true, format:'{point.name}', style:{fontSize:'10px'}}}},
+      series:[{name:'Orders', colorByPoint:true, data:[
+        {name:'Bounce & Slide', y:12}, {name:'Dry Slides', y:8},
+        {name:'Bounce Houses', y:15}, {name:'Hidden Category', y:3}
+      ]}], credits:{enabled:false}, legend:{enabled:false}
     });
   }
 }
 
-// ===== CALENDAR NAV - HOME ===== 
-function initCalendarNav() {
-  var prevBtn = document.getElementById('cal-prev');
-  var nextBtn = document.getElementById('cal-next');
-  if (prevBtn) {
-    prevBtn.addEventListener('click', function() {
-      currentMonth--;
-      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-      renderCalendar(currentYear, currentMonth);
-    });
-  }
-  if (nextBtn) {
-    nextBtn.addEventListener('click', function() {
-      currentMonth++;
-      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-      renderCalendar(currentYear, currentMonth);
+function renderHomeMonthly() {
+  if (typeof Highcharts === 'undefined') return;
+  var el = document.getElementById('home_monthly_chart');
+  if (el && !el._hc) {
+    el._hc = true;
+    Highcharts.chart('home_monthly_chart', {
+      chart:{type:'bar', backgroundColor:'transparent'},
+      title:{text:''},
+      xAxis:{categories:['Mar 26']},
+      yAxis:{title:{text:'Values'}, min:0, max:500},
+      series:[{name:'Payments', data:[475], color:'#4472c4'}],
+      credits:{enabled:false}
     });
   }
 }
 
-// ===== INIT =====
+// =================== INIT ===================
 document.addEventListener('DOMContentLoaded', function() {
-  // Render home calendar
-  renderCalendar(currentYear, currentMonth);
-  initCalendarNav();
-
-  // Render home charts
-  renderMonthlyChart();
-  renderBestSellersChart();
-});/* ERS Control Panel - app.js */
-(function() {
-  'use strict';
-
-  // ===== CALENDAR =====
-  var currentYear = 2026;
-  var currentMonth = 4; // 0-indexed: 4 = May
-
-  var monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  var dayNames = ["S","M","T","W","T","F","S"];
-
-  // Sample orders data (simulates backend data)
-  var ordersData = {
-    "2026-05-08": [{type:"delivery", count:1}],
-    "2026-05-09": [{type:"delivery", count:1}],
-    "2026-05-10": [{type:"active", count:1}],
-    "2026-05-11": [{type:"active", count:1}],
-    "2026-05-12": [{type:"active", count:1}],
-    "2026-05-13": [{type:"active", count:1}],
-    "2026-05-14": [{type:"active", count:1}],
-    "2026-05-15": [{type:"active", count:1}],
-    "2026-05-16": [{type:"active", count:1}],
-    "2026-05-17": [{type:"active", count:1}],
-    "2026-05-18": [{type:"pickup", count:1}],
-    "2026-05-19": [{type:"active", count:1}],
-    "2026-05-25": [{type:"holiday", count:0}] // Memorial Day
-  };
-
-  var holidays = {
-    "2026-05-08": "Truman Day",
-    "2026-05-25": "Memorial Day"
-  };
-
-  function renderCalendar(year, month) {
-    var grid = document.getElementById('calendar-grid');
-    if(!grid) return;
-
-    var firstDay = new Date(year, month, 1).getDay();
-    var daysInMonth = new Date(year, month + 1, 0).getDate();
-    var today = new Date();
-
-    var html = '<table><thead><tr>';
-    dayNames.forEach(function(d) { html += '<th>' + d + '<\/th>'; });
-    html += '<\/tr><\/thead><tbody><tr>';
-
-    // Empty cells before first day
-    for(var i = 0; i < firstDay; i++) {
-      html += '<td><\/td>';
-    }
-
-    var dayCount = firstDay;
-    for(var d = 1; d <= daysInMonth; d++) {
-      if(dayCount % 7 === 0) html += '<\/tr><tr>';
-
-      var dateKey = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-      var isToday = (today.getFullYear()===year && today.getMonth()===month && today.getDate()===d);
-      var isWeekend = (dayCount % 7 === 0 || dayCount % 7 === 6);
-      var orders = ordersData[dateKey] || [];
-      var holiday = holidays[dateKey];
-
-      var classes = 'cal-day';
-      if(isToday) classes += ' today';
-      if(isWeekend) classes += ' weekend';
-      if(orders.length > 0) classes += ' has-orders';
-
-      html += '<td class="' + classes + '">';
-      html += '<a href="#">' + d + '<\/a>';
-      if(holiday) html += ' <i class="fas fa-sun cal-holiday" title="' + holiday + '"><\/i>';
-      orders.forEach(function(order) {
-        var color = '#43b41c';
-        if(order.type === 'pickup') color = '#e03642';
-        if(order.type === 'active') color = 'rgb(115,139,202)';
-        html += ' <span class="cal-badge" style="background:' + color + '">' + order.count + '<\/span>';
-      });
-      html += '<\/td>';
-      dayCount++;
-    }
-
-    // Fill remaining cells
-    while(dayCount % 7 !== 0) {
-      html += '<td><\/td>';
-      dayCount++;
-    }
-
-    html += '<\/tr><\/tbody><\/table>';
-    grid.innerHTML = html;
-
-    // Update display
-    var display = document.getElementById('calendar_month_display');
-    if(display) display.textContent = monthNames[month] + ' ' + year;
-
-    var select = document.getElementById('calendar_month_select');
-    if(select) select.value = year + '-' + String(month+1).padStart(2,'0');
-  }
-
-  // ===== HIGHCHARTS - Monthly Payments Bar =====
-  function renderMonthlyChart() {
-    var container = document.getElementById('monthly_chart_container');
-    if(!container || typeof Highcharts === 'undefined') return;
-
-    Highcharts.chart('monthly_chart_container', {
-      chart: { type: 'column', backgroundColor: '#ffffff' },
-      title: { text: 'Monthly Payments Received', style: { color: '#333', fontSize: '18px' } },
-      xAxis: { categories: ['Mar 26'], crosshair: true },
-      yAxis: { min: 0, title: { text: 'Values' } },
-      series: [{
-        name: 'Monthly Sales',
-        data: [475],
-        color: '#337ab7'
-      }],
-      legend: { enabled: false },
-      credits: { enabled: false }
-    });
-  }
-
-  // ===== HIGHCHARTS - Best Sellers Pie =====
-  function renderBestSellersChart() {
-    var container = document.getElementById('chart_container');
-    if(!container || typeof Highcharts === 'undefined') return;
-
-    Highcharts.chart('chart_container', {
-      chart: { type: 'pie' },
-      title: { text: 'Best Sellers over the past 60 days', style: { color: '#333', fontSize: '18px' } },
-      series: [{
-        name: 'Sales by Category',
-        colorByPoint: true,
-        data: [
-          { name: 'Bounce Houses', y: 19542, color: '#5cb85c' },
-          { name: 'Dry Slides', y: 4939, color: '#333333' },
-          { name: 'Bounce & Slide Combos', y: 5763, color: '#5b9bd5' },
-          { name: 'Hidden Category', y: 825, color: '#f97316' }
-        ]
-      }],
-      credits: { enabled: false },
-      plotOptions: {
-        pie: {
-          allowPointSelect: true,
-          cursor: 'pointer',
-          dataLabels: { enabled: true, format: '{point.name}' },
-          showInLegend: false,
-          innerSize: '40%'
-        }
-      }
-    });
-  }
-
-  // ===== NAVBAR TAB SWITCHING =====
-  function initNavTabs() {
-    var navLinks = document.querySelectorAll('.nav-link-item');
-    var adminSubnav = document.getElementById('admin-subnav');
-
-    navLinks.forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        var tab = this.dataset.tab;
-
-        // Remove active from all
-        document.querySelectorAll('.navbar-ers .nav > li').forEach(function(li) {
-          li.classList.remove('active');
-        });
-
-        // Set active on clicked
-        this.closest('li').classList.add('active');
-
-        // Show/hide admin subnav
-        if(adminSubnav) {
-          adminSubnav.style.display = (tab === 'admin') ? 'block' : 'none';
-        }
-      });
-    });
-  }
-
-  // ===== CALENDAR NAVIGATION =====
-  function initCalendarNav() {
-    var prevBtn = document.getElementById('cal-prev');
-    var nextBtn = document.getElementById('cal-next');
-    var monthSelect = document.getElementById('calendar_month_select');
-
-    if(prevBtn) {
-      prevBtn.addEventListener('click', function() {
-        currentMonth--;
-        if(currentMonth < 0) { currentMonth = 11; currentYear--; }
-        renderCalendar(currentYear, currentMonth);
-      });
-    }
-
-    if(nextBtn) {
-      nextBtn.addEventListener('click', function() {
-        currentMonth++;
-        if(currentMonth > 11) { currentMonth = 0; currentYear++; }
-        renderCalendar(currentYear, currentMonth);
-      });
-    }
-
-    if(monthSelect) {
-      monthSelect.addEventListener('change', function() {
-        var parts = this.value.split('-');
-        currentYear = parseInt(parts[0]);
-        currentMonth = parseInt(parts[1]) - 1;
-        renderCalendar(currentYear, currentMonth);
-      });
-    }
-  }
-
-  // ===== BOOTSTRAP DROPDOWNS (fallback if Bootstrap JS loaded) =====
-  function initDropdowns() {
-    document.querySelectorAll('.dropdown-toggle').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var menu = this.nextElementSibling;
-        var isOpen = menu.style.display === 'block';
-        // Close all menus
-        document.querySelectorAll('.dropdown-menu').forEach(function(m) { m.style.display = 'none'; });
-        // Toggle this one
-        if(!isOpen) menu.style.display = 'block';
-      });
-    });
-
-    document.addEventListener('click', function() {
-      document.querySelectorAll('.dropdown-menu').forEach(function(m) { m.style.display = 'none'; });
-    });
-  }
-
-  // ===== INIT =====
-  document.addEventListener('DOMContentLoaded', function() {
-    renderCalendar(currentYear, currentMonth);
-    initCalendarNav();
-    initNavTabs();
-    initDropdowns();
-    
-    // Charts - wait a bit for Highcharts to load
-    setTimeout(function() {
-      renderMonthlyChart();
-      renderBestSellersChart();
-    }, 300);
-  });
-
-})();
+  renderHomeCalendar();
+  renderHomeBestSellers();
+  renderHomeMonthly();
+  renderCustomersTable();
+});
