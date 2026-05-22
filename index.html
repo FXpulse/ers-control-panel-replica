@@ -24,47 +24,429 @@
     </ul>
     <div id="ers_navbar_right"><span>Signed in as LudmillaM (Administrator)</span><button class="ers_btn_logout">Logout</button></div>
   </nav>
+
+  <!-- ADMIN SUBNAV -->
   <div id="admin_subnav" class="ers_subnav_bar" style="display:none;">
-    <div class="subnav_group"><button class="subnav_group_btn" onclick="toggleGroup(this)">General Config <i class="fa-solid fa-chevron-down"></i></button><div class="subnav_group_links"><a href="#">Company Info</a><a href="#">Company Time Zone</a><a href="#">Routing Settings</a><a href="#">Google Integration Settings</a><a href="#">Quickbooks Online</a><a href="#">Mailchimp Settings</a><a href="#">AWeber Settings</a><a href="#">Constant Contact Settings</a><a href="#">Text Messaging Settings</a><a href="#">Text Messaging Logs</a><a href="#">TaxCloud Settings</a><a href="#">Misc Settings</a><a href="#">Api Info</a><a href="#">Users</a><a href="#">System Setup</a><a href="#">System Settings</a><a href="#">Locations</a><a href="#">Company Types</a><a href="#">Company Roles</a><a href="#">HighLevel Connect</a></div></div>
-    <div class="subnav_group"><button class="subnav_group_btn" onclick="toggleGroup(this)">Order Config <i class="fa-solid fa-chevron-down"></i></button><div class="subnav_group_links"><a href="#">Reminders</a><a href="#">Order Options</a><a href="#">References</a><a href="#">Setup Surfaces</a><a href="#">Coupons</a><a href="#">Service Areas</a><a href="#">Misc Order Settings</a><a href="#">Loyalty and Credit Types</a></div></div>
-    <div class="subnav_group"><button class="subnav_group_btn" onclick="toggleGroup(this)">Documents <i class="fa-solid fa-chevron-down"></i></button><div class="subnav_group_links"><a href="#">General Documents</a><a href="#">Source Code</a><a href="#">Setup Surveys</a><a href="#">Automatic Messages</a><a href="#">Automatic Text Messaging</a><a href="#">Text Message Templates</a><a href="#">Email Templates for Orders</a><a href="#">Email Templates for Marketing</a><a href="#">ERSMail</a><a href="#">Contract Options</a></div></div>
-    <div class="subnav_group"><button class="subnav_group_btn" onclick="toggleGroup(this)">Products <i class="fa-solid fa-chevron-down"></i></button><div class="subnav_group_links"><a href="#">Categories</a><a href="#">Items</a><a href="#">Sorting</a><a href="#">Schedule Profiles</a><a href="#">Bulk Pricing</a><a href="#">Addons</a><a href="#">Product Sharing</a><a href="#">Cost of Goods</a><a href="#">Register Setup</a><a href="#">Auto Charge</a><a href="#">ERSPay Capital Advance</a><a href="#">Recurring Profiles</a></div></div>
-    <div class="subnav_group"><button class="subnav_group_btn" onclick="toggleGroup(this)">Rules <i class="fa-solid fa-chevron-down"></i></button><div class="subnav_group_links"><a href="#">Adjustments</a><a href="#">Deposit Rules</a><a href="#">Price Rule Sets</a><a href="#">Availability Rule Sets</a></div></div>
-    <div class="subnav_group"><button class="subnav_group_btn" onclick="toggleGroup(this)">Website <i class="fa-solid fa-chevron-down"></i></button><div class="subnav_group_links"><a href="#">Website Pages</a><a href="#">General Images</a><a href="#">Gallery</a><a href="#">Navigation Editor</a><a href="#">Premium Features</a><a href="#">Responsive Editor</a><a href="#">Wordpress Setup</a><a href="#">Conversion Booster</a></div></div>
-  </div>
-  <div id="tab_home" class="tab_content active_tab">
-    <div class="ers_row">
-      <div class="ers_col_left">
-        <div class="ers_widget ers_calendar_widget">
-          <div class="ers_widget_header"><span class="ers_widget_title"><i class="fa-solid fa-calendar"></i> Calendar</span><div class="ers_cal_nav"><button id="cal-prev"><i class="fa-solid fa-chevron-left"></i></button><span id="calendar_month_display">May 2026</span><button id="cal-next"><i class="fa-solid fa-chevron-right"></i></button></div></div>
-          <div class="ers_cal_filters"><label><input type="checkbox" checked> <span class="dot dot_delivery"></span> Delivery</label><label><input type="checkbox" checked> <span class="dot dot_pickup"></span> Pickup</label><label><input type="checkbox" checked> <span class="dot dot_will_call"></span> Will Call</label><label><input type="checkbox" checked> <span class="dot dot_setup"></span> Setup</label><label><input type="checkbox" checked> <span class="dot dot_breakdown"></span> Breakdown</label><select id="calendar_month_select" style="display:none;"></select></div>
-          <div id="calendar_container"><table class="cal_table"><thead><tr id="calendar-grid-head"></tr></thead><tbody id="calendar-grid"></tbody></table></div>
-        </div>
-        <div class="ers_charts_row">
-          <div class="ers_widget ers_chart_widget"><div class="ers_widget_header"><span class="ers_widget_title"><i class="fa-solid fa-chart-bar"></i> Monthly Payments</span></div><div id="monthly_chart_container" style="height:220px;"></div></div>
-          <div class="ers_widget ers_chart_widget"><div class="ers_widget_header"><span class="ers_widget_title"><i class="fa-solid fa-chart-pie"></i> Best Sellers</span></div><div id="chart_container" style="height:220px;"></div></div>
-        </div>
+    <div class="subnav_group">
+      <button class="subnav_group_btn" onclick="toggleGroup(this)">General Config <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="subnav_group_links">
+        <a href="#">Company Info</a><a href="#">Company Time Zone</a><a href="#">Routing Settings</a>
+        <a href="#">Google Integration Settings</a><a href="#">Quickbooks Online</a><a href="#">Mailchimp Settings</a>
+        <a href="#">AWeber Settings</a><a href="#">Constant Contact Settings</a><a href="#">Text Messaging Settings</a>
+        <a href="#">Text Messaging Logs</a><a href="#">TaxCloud Settings</a><a href="#">Misc Settings</a>
+        <a href="#">Api Info</a><a href="#">Users</a><a href="#">System Setup</a>
+        <a href="#">System Settings</a><a href="#">Locations</a><a href="#">Company Types</a>
+        <a href="#">Company Roles</a><a href="#">HighLevel Connect</a>
       </div>
-      <div class="ers_col_right">
-        <div class="ers_stats_row">
-          <div class="ers_stat_widget" style="background:#068688;"><i class="fa-solid fa-calendar-check"></i><div class="ers_stat_info"><span class="ers_stat_num">12</span><span class="ers_stat_label">Today Orders</span></div></div>
-          <div class="ers_stat_widget" style="background:#e67e22;"><i class="fa-solid fa-truck"></i><div class="ers_stat_info"><span class="ers_stat_num">5</span><span class="ers_stat_label">Deliveries</span></div></div>
-          <div class="ers_stat_widget" style="background:#27ae60;"><i class="fa-solid fa-dollar-sign"></i><div class="ers_stat_info"><span class="ers_stat_num">$2,475</span><span class="ers_stat_label">Revenue</span></div></div>
-          <div class="ers_stat_widget" style="background:#8e44ad;"><i class="fa-solid fa-users"></i><div class="ers_stat_info"><span class="ers_stat_num">8</span><span class="ers_stat_label">New Customers</span></div></div>
-        </div>
-        <div class="ers_widget ers_weather_widget"><div class="ers_widget_header"><span class="ers_widget_title"><i class="fa-solid fa-cloud-sun"></i> Weather - St. Johns, FL</span></div><div class="ers_weather_content"><div class="ers_weather_today"><i class="fa-solid fa-sun ers_weather_icon"></i><div class="ers_weather_temp">82&deg;F</div><div class="ers_weather_desc">Sunny</div></div><div class="ers_weather_forecast"><div class="ers_forecast_day"><span>Thu</span><i class="fa-solid fa-cloud-sun"></i><span>79&deg;</span></div><div class="ers_forecast_day"><span>Fri</span><i class="fa-solid fa-cloud-showers-heavy"></i><span>74&deg;</span></div><div class="ers_forecast_day"><span>Sat</span><i class="fa-solid fa-sun"></i><span>85&deg;</span></div><div class="ers_forecast_day"><span>Sun</span><i class="fa-solid fa-cloud"></i><span>77&deg;</span></div><div class="ers_forecast_day"><span>Mon</span><i class="fa-solid fa-sun"></i><span>83&deg;</span></div></div></div></div>
-        <div class="ers_widget ers_tasks_widget"><div class="ers_widget_header"><span class="ers_widget_title"><i class="fa-solid fa-list-check"></i> Tasks</span><button class="ers_btn_small">+ Add Task</button></div><ul class="ers_tasks_list"><li class="ers_task done"><i class="fa-solid fa-circle-check"></i> Call supplier about bounce houses</li><li class="ers_task done"><i class="fa-solid fa-circle-check"></i> Update delivery schedule for weekend</li><li class="ers_task"><i class="fa-regular fa-circle"></i> Review new customer applications</li><li class="ers_task"><i class="fa-regular fa-circle"></i> Order replacement parts for slide</li><li class="ers_task"><i class="fa-regular fa-circle"></i> Follow up with Smith party quote</li></ul></div>
-        <div class="ers_widget ers_changelog_widget"><div class="ers_widget_header"><span class="ers_widget_title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Updates</span></div><ul class="ers_changelog_list"><li><span class="ers_badge badge_new">New</span><span class="ers_change_text">Online booking portal launched</span><span class="ers_change_date">May 20</span></li><li><span class="ers_badge badge_improved">Improved</span><span class="ers_change_text">Calendar shows delivery zones on map</span><span class="ers_change_date">May 18</span></li><li><span class="ers_badge badge_fixed">Fixed</span><span class="ers_change_text">Payment receipts generate correctly as PDF</span><span class="ers_change_date">May 15</span></li><li><span class="ers_badge badge_new">New</span><span class="ers_change_text">Staff scheduling module added</span><span class="ers_change_date">May 12</span></li><li><span class="ers_badge badge_improved">Improved</span><span class="ers_change_text">Faster search across all inventory items</span><span class="ers_change_date">May 10</span></li></ul></div>
+    </div>
+    <div class="subnav_group">
+      <button class="subnav_group_btn" onclick="toggleGroup(this)">Order Config <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="subnav_group_links">
+        <a href="#">Reminders</a><a href="#">Order Options</a><a href="#">Misc Order Settings</a>
+        <a href="#">Coupons</a><a href="#">Service Areas</a><a href="#">Damage Waiver</a>
+        <a href="#">Taxes</a><a href="#">Discount Groups</a>
+      </div>
+    </div>
+    <div class="subnav_group">
+      <button class="subnav_group_btn" onclick="toggleGroup(this)">Documents <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="subnav_group_links">
+        <a href="#">General Documents</a><a href="#">Contracts</a><a href="#">Invoices</a>
+        <a href="#">Quotes</a><a href="#">Surveys</a><a href="#">ERSMail Templates</a>
+        <a href="#">Packing Lists</a><a href="#">Merge Fields</a><a href="#">Digital Signatures</a><a href="#">ERSMail Log</a>
+      </div>
+    </div>
+    <div class="subnav_group">
+      <button class="subnav_group_btn" onclick="toggleGroup(this)">Products <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="subnav_group_links">
+        <a href="#">Categories</a><a href="#">Items</a><a href="#">Add-ons</a>
+        <a href="#">Packages</a><a href="#">Upsells</a><a href="#">Price Sheets</a>
+        <a href="#">Damage Waiver</a><a href="#">Delivery Rates</a><a href="#">Product Pricing</a>
+        <a href="#">Inventory</a><a href="#">Item Groups</a><a href="#">Variants</a>
+      </div>
+    </div>
+    <div class="subnav_group">
+      <button class="subnav_group_btn" onclick="toggleGroup(this)">Rules <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="subnav_group_links">
+        <a href="#">Adjustments</a><a href="#">Deposits</a><a href="#">Pricing</a><a href="#">Availability</a>
+      </div>
+    </div>
+    <div class="subnav_group">
+      <button class="subnav_group_btn" onclick="toggleGroup(this)">Website <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="subnav_group_links">
+        <a href="#">Website Pages</a><a href="#">Images</a><a href="#">Gallery</a>
+        <a href="#">Navigation Editor</a><a href="#">Blogs</a><a href="#">Testimonials</a>
+        <a href="#">SEO Settings</a><a href="#">Domain Settings</a>
       </div>
     </div>
   </div>
-  <div id="tab_admin" class="tab_content" style="display:none;"><div class="ers_tab_page_header"><h2><i class="fa-solid fa-gear"></i> Admin Settings</h2><p>Manage your company configuration, products, documents, rules, and website settings.</p></div><div class="ers_admin_grid"><div class="ers_admin_card"><i class="fa-solid fa-building"></i><h3>General Config</h3><p>Company info, users, system settings, integrations</p></div><div class="ers_admin_card"><i class="fa-solid fa-file-invoice"></i><h3>Order Config</h3><p>Reminders, order options, coupons, service areas</p></div><div class="ers_admin_card"><i class="fa-solid fa-file-alt"></i><h3>Documents</h3><p>Templates, contracts, surveys, ERSMail</p></div><div class="ers_admin_card"><i class="fa-solid fa-box"></i><h3>Products</h3><p>Categories, items, pricing, addons</p></div><div class="ers_admin_card"><i class="fa-solid fa-sliders"></i><h3>Rules</h3><p>Adjustments, deposits, pricing, availability</p></div><div class="ers_admin_card"><i class="fa-solid fa-globe"></i><h3>Website</h3><p>Pages, images, gallery, navigation editor</p></div></div></div>
-  <div id="tab_scheduling" class="tab_content" style="display:none;"><div class="ers_cal_toolbar"><button class="ers_btn_green"><i class="fa-solid fa-plus"></i> Book</button><select><option>Active</option></select><button id="sched_prev"><i class="fa-solid fa-chevron-left"></i></button><span id="sched_month_label">May 2026</span><button id="sched_next"><i class="fa-solid fa-chevron-right"></i></button></div><div id="sched_calendar_container"><table class="cal_table cal_full"><thead><tr id="sched-grid-head"></tr></thead><tbody id="sched-grid"></tbody></table></div><div class="cal_legend"><span class="leg_item"><span class="leg_dot" style="background:#3498db;"></span> Service/Time</span><span class="leg_item"><span class="leg_dot" style="background:#27ae60;"></span> Delivery</span><span class="leg_item"><span class="leg_dot" style="background:#e74c3c;"></span> Pickup</span><span class="leg_item"><span class="leg_dot" style="background:#f7c948;"></span> Holidays</span></div></div>
-  <div id="tab_customers" class="tab_content" style="display:none;"><div class="ers_customers_toolbar"><button class="ers_btn_blue"><i class="fa-solid fa-magnifying-glass"></i> New Search</button><button class="ers_btn_blue"><i class="fa-solid fa-magnifying-glass"></i> Search</button><button class="ers_btn_green"><i class="fa-solid fa-plus"></i> Create</button><button class="ers_btn_outline">Contracts</button><button class="ers_btn_outline">ERSMail</button></div><div class="ers_customers_toolbar" style="margin-top:4px;"><button class="ers_btn_outline">Text Messaging</button><button class="ers_btn_orange">Gift Cards</button><button class="ers_btn_outline">Tasks</button><button class="ers_btn_teal">Contact Requests</button><button class="ers_btn_outline">Commercial CRM</button></div><div class="ers_table_wrapper"><div class="ers_filters_bar"><i class="fa-solid fa-filter"></i> Filters</div><table class="ers_data_table"><thead><tr><th></th><th>Name</th><th>Email</th><th>Phone</th><th>Company</th><th>Complete</th><th>Last</th><th>Upcoming</th><th>Quotes</th><th></th></tr></thead><tbody><tr><td><i class="fa-solid fa-circle-user" style="color:#068688;font-size:18px;"></i></td><td>Il Murali</td><td>admin@ilmurali.com</td><td>866-884-7494</td><td></td><td>0</td><td></td><td>0</td><td>0</td><td><button class="ers_btn_green_sm">New Quote</button></td></tr><tr><td><i class="fa-solid fa-circle-user" style="color:#068688;font-size:18px;"></i></td><td>Abby Weiss</td><td>abby.weiss@acesschurch...</td><td>904-647-1200</td><td>Access Church</td><td class="cell_active">1</td><td>03/29/2026</td><td>0</td><td>0</td><td><button class="ers_btn_green_sm">New Quote</button></td></tr><tr><td><i class="fa-solid fa-circle-user" style="color:#068688;font-size:18px;"></i></td><td>Henry Nardone</td><td>ludmilayhenry@gmail.com</td><td>786-307-2711</td><td></td><td class="cell_active">2</td><td>05/09/2026</td><td>0</td><td>0</td><td><button class="ers_btn_green_sm">New Quote</button></td></tr></tbody></table></div></div>
-  <div id="tab_delivery" class="tab_content" style="display:none;"><div class="ers_row"><div style="flex:1;"><div class="ers_cal_toolbar"><button id="del_prev"><i class="fa-solid fa-chevron-left"></i></button><span id="del_month_label" style="font-weight:700;min-width:100px;text-align:center;">May 2026</span><button id="del_next"><i class="fa-solid fa-chevron-right"></i></button><select><option>Active - All</option></select></div><div id="del_calendar_container"><table class="cal_table cal_full"><thead><tr id="del-grid-head"></tr></thead><tbody id="del-grid"></tbody></table></div><div class="cal_legend"><span class="leg_item"><span class="leg_dot" style="background:#27ae60;"></span> Delivery</span><span class="leg_item"><span class="leg_dot" style="background:#e74c3c;"></span> Pickup</span></div></div><div class="ers_delivery_sidebar"><div class="ers_delivery_panel"><div class="ers_delivery_panel_header">Routing version: V3</div><a href="#"><i class="fa-solid fa-truck"></i> Assign Drivers</a><a href="#"><i class="fa-solid fa-file-contract"></i> Print Contracts</a><a href="#"><i class="fa-solid fa-file-invoice"></i> Print Invoices</a><a href="#"><i class="fa-solid fa-box-open"></i> Packing List</a><a href="#"><i class="fa-solid fa-chart-bar"></i> Product Status Report</a><a href="#"><i class="fa-solid fa-triangle-exclamation"></i> Product Attention Report</a><a href="#"><i class="fa-solid fa-location-dot"></i> Truck Tracker</a></div></div></div></div>
-  <div id="tab_reports" class="tab_content" style="display:none;"><div class="ers_charts_grid"><div class="ers_widget"><div class="ers_widget_header"><span class="ers_widget_title">Best Sellers (60 days)</span></div><div id="reports_pie" style="height:280px;"></div></div><div class="ers_widget"><div class="ers_widget_header"><span class="ers_widget_title">Today's Payments</span></div><div style="padding:40px;text-align:center;"><div style="font-size:28px;font-weight:700;color:#068688;">$0.00</div></div></div><div class="ers_widget"><div class="ers_widget_header"><span class="ers_widget_title">Monthly Payments Received</span></div><div id="reports_bar" style="height:280px;"></div></div><div class="ers_widget"><div class="ers_widget_header"><span class="ers_widget_title">Employee Sales Month to Date</span></div><div style="padding:40px;text-align:center;color:#888;">No data</div></div></div></div>
-  <div id="tab_marketing" class="tab_content" style="display:none;"><div style="padding:16px;"><h2 style="margin-bottom:20px;color:#068688;">Marketing Dashboard</h2></div><div class="ers_marketing_grid"><div class="ers_marketing_card"><h3>Search Engine Optimization (SEO)</h3><p>Maximize your business online impact with tailored SEO strategies. Enhance search engine rankings and attract more organic traffic.</p><button class="ers_btn_dark">Book A Demo</button></div><div class="ers_marketing_card"><h3>Facebook Ads</h3><p>Elevate your marketing with specialized Facebook Ads services, showcasing your products to interested customers.</p><button class="ers_btn_dark">Book A Demo</button></div><div class="ers_marketing_card"><h3>Google Ads</h3><p>Leverage the power of Google Ads to drive more traffic and bookings for your business with targeted campaigns.</p><button class="ers_btn_dark">Book A Demo</button></div><div class="ers_marketing_card"><h3>HighLevel</h3><p>Discover the power of HighLevel, our advanced marketing and automation platform.</p><button class="ers_btn_dark">Book A Demo</button></div></div></div>
-  <div id="tab_help" class="tab_content" style="display:none;"><div style="padding:32px;max-width:800px;margin:0 auto;"><h2 style="color:#068688;margin-bottom:20px;"><i class="fa-solid fa-circle-question"></i> Help &amp; Support</h2><div class="ers_help_grid"><div class="ers_help_card"><i class="fa-solid fa-book"></i><h3>Documentation</h3><p>Access the complete ERS user manual.</p></div><div class="ers_help_card"><i class="fa-solid fa-video"></i><h3>Video Tutorials</h3><p>Watch step-by-step video tutorials.</p></div><div class="ers_help_card"><i class="fa-solid fa-headset"></i><h3>Contact Support</h3><p>Submit a support ticket or chat with our team.</p></div><div class="ers_help_card"><i class="fa-solid fa-comments"></i><h3>Community Forum</h3><p>Connect with other ERS users.</p></div></div></div></div>
+
+  <!-- MODAL OVERLAY -->
+  <div id="modal_overlay" class="modal-overlay" onclick="closeModal()" style="display:none;"></div>
+
+  <!-- ORDER DETAIL MODAL -->
+  <div id="order_modal" class="ers-modal" style="display:none;">
+    <div class="modal-header">
+      <h3 id="modal_order_title">Order #43</h3>
+      <button onclick="closeModal()" class="modal-close">&times;</button>
+    </div>
+    <div id="modal_order_body" class="modal-body"></div>
+  </div>
+
+  <!-- BOOK ORDER MODAL -->
+  <div id="book_modal" class="ers-modal" style="display:none;">
+    <div class="modal-header">
+      <h3>Book New Order</h3>
+      <button onclick="closeModal()" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form onsubmit="return false;">
+        <div class="form-group"><label>Customer Name</label><input type="text" class="form-control" placeholder="Search customer..."></div>
+        <div class="form-group"><label>Event Date</label><input type="date" class="form-control"></div>
+        <div class="form-group"><label>Start Time</label><input type="time" class="form-control"></div>
+        <div class="form-group"><label>End Time</label><input type="time" class="form-control"></div>
+        <div class="form-group"><label>Products</label><select class="form-control"><option>Bounce House</option><option>Fire Fighter Station</option><option>Unicorn Dreamland</option><option>Dry Slides</option></select></div>
+        <div class="form-group"><label>Notes</label><textarea class="form-control" rows="3"></textarea></div>
+        <button type="submit" class="btn-primary" onclick="closeModal()">Create Order</button>
+        <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD TASK MODAL -->
+  <div id="task_modal" class="ers-modal" style="display:none;">
+    <div class="modal-header">
+      <h3>Add New Task</h3>
+      <button onclick="closeModal()" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form onsubmit="return false;">
+        <div class="form-group"><label>Task Description</label><input type="text" class="form-control" placeholder="Enter task..."></div>
+        <div class="form-group"><label>Assigned To</label><select class="form-control"><option>LudmillaM</option><option>Abby Weiss</option><option>Henry Nardone</option></select></div>
+        <div class="form-group"><label>Due Date</label><input type="date" class="form-control"></div>
+        <button type="submit" class="btn-primary" onclick="closeModal()">Add Task</button>
+        <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CREATE CUSTOMER MODAL -->
+  <div id="customer_modal" class="ers-modal" style="display:none;">
+    <div class="modal-header">
+      <h3>Create New Customer</h3>
+      <button onclick="closeModal()" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" class="form-control"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" class="form-control"></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" class="form-control"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" class="form-control"></div>
+        <div class="form-group"><label>Company</label><input type="text" class="form-control"></div>
+        <div class="form-group"><label>Address</label><input type="text" class="form-control"></div>
+        <button type="submit" class="btn-primary" onclick="closeModal()">Create Customer</button>
+        <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SEARCH MODAL -->
+  <div id="search_modal" class="ers-modal" style="display:none;">
+    <div class="modal-header">
+      <h3>Search Orders</h3>
+      <button onclick="closeModal()" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form onsubmit="return false;">
+        <div class="form-group"><label>Customer Name</label><input type="text" class="form-control"></div>
+        <div class="form-group"><label>Order #</label><input type="text" class="form-control"></div>
+        <div class="form-group"><label>Date From</label><input type="date" class="form-control"></div>
+        <div class="form-group"><label>Date To</label><input type="date" class="form-control"></div>
+        <div class="form-group"><label>Status</label>
+          <select class="form-control"><option>All</option><option>Active</option><option>Incomplete</option><option>Canceled</option></select>
+        </div>
+        <button type="submit" class="btn-primary" onclick="closeModal()">Search</button>
+        <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =================== HOME TAB =================== -->
+  <div id="tab_home" class="tab-panel active">
+    <div id="home_banner" class="home-banner">
+      <button class="banner-close" onclick="document.getElementById('home_banner').style.display='none'">&times;</button>
+      <h3>Busy season is here. Your phone should be ringing. Is it?</h3>
+      <p>Spring and summer are the highest demand months of the year for event rentals. If you are not showing up at the top of Google Maps and running targeted ads right now, those calls are going to your competitors.</p>
+      <ul><li>Google Maps optimization</li><li>Google &amp; Meta Ads</li><li>AI search visibility</li><li>GoHighLevel CRM</li></ul>
+      <p>👉 <a href="#" onclick="switchTab('marketing',document.querySelector('[data-tab=marketing]'));return false;">Book a strategy call with Brian Thomas.</a></p>
+    </div>
+    <div class="home-layout">
+      <div class="home-main">
+        <div class="home-cal-header">
+          <button class="btn-search-cal" onclick="openModal('search_modal')">Search &gt;&gt;</button>
+          <button class="cal-prev-home" onclick="changeHomeMonth(-1)">&#8249;</button>
+          <span id="home_month_label" class="cal-month-label">May 2026</span>
+          <button class="cal-next-home" onclick="changeHomeMonth(1)">&#8250;</button>
+          <select id="home_filter" class="cal-filter-select" onchange="renderHomeCalendar()">
+            <option value="active">Active</option>
+            <option value="deliver">Active - Deliver</option>
+            <option value="pickup">Active - Customer Pickup</option>
+            <option value="incomplete">Incomplete</option>
+            <option value="quotes">Sent Quotes</option>
+            <option value="canceled">Canceled</option>
+          </select>
+        </div>
+        <table class="ers-calendar-table">
+          <thead><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr></thead>
+          <tbody id="home_cal_grid"></tbody>
+        </table>
+        <div class="cal-legend">
+          <span><span class="legend-dot" style="background:#4472c4"></span> Service / Time in time</span>
+          <span><span class="legend-dot" style="background:#70ad47"></span> Delivery</span>
+          <span><span class="legend-dot" style="background:#ed7d31"></span> Pickup</span>
+          <span><span class="legend-dot" style="background:#bfbfbf"></span> Overnight / Multiday</span>
+          <span><span class="legend-dot" style="background:#ffd966"></span> Holidays</span>
+        </div>
+        <div class="home-charts-row">
+          <div class="chart-card"><div class="chart-title">Monthly Payments Received</div><div id="home_monthly_chart" style="height:200px"></div></div>
+        </div>
+        <div class="recent-updates">
+          <h4><i class="fa-solid fa-rotate-left"></i> Recent Updates</h4>
+          <div class="update-item"><span class="badge badge-new">NEW</span><span class="update-text">Transaction Search &amp; Chargeback Reports</span><span class="update-date">May 01</span></div>
+          <div class="update-item"><span class="badge badge-improved">IMPROVED</span><span class="update-text">Payment Page Update - shows what customers owe</span><span class="update-date">Apr 15</span></div>
+          <div class="update-item"><span class="badge badge-new">NEW</span><span class="update-text">Quote PDFs in Emails (Link + Attachment)</span><span class="update-date">Mar 26</span></div>
+          <div class="update-item"><span class="badge badge-improved">IMPROVED</span><span class="update-text">Mobile-Optimized Control Panel</span><span class="update-date">Mar 25</span></div>
+          <div class="update-item"><span class="badge badge-new">NEW</span><span class="update-text">Billing Enhancements - Get Paid Faster</span><span class="update-date">Mar 11</span></div>
+        </div>
+      </div>
+      <div class="home-sidebar">
+        <div class="stat-widget teal"><i class="fa-solid fa-calendar-check"></i><div><div class="stat-num">12</div><div class="stat-label">Today Orders</div></div></div>
+        <div class="stat-widget orange"><i class="fa-solid fa-truck"></i><div><div class="stat-num">5</div><div class="stat-label">Deliveries</div></div></div>
+        <div class="stat-widget green"><i class="fa-solid fa-dollar-sign"></i><div><div class="stat-num">$2,475</div><div class="stat-label">Revenue</div></div></div>
+        <div class="stat-widget purple"><i class="fa-solid fa-user-plus"></i><div><div class="stat-num">8</div><div class="stat-label">New Customers</div></div></div>
+        <div class="sidebar-card">
+          <div class="sidebar-card-title"><i class="fa-solid fa-cloud-sun"></i> Weather - St. Johns, FL</div>
+          <div class="weather-widget">
+            <div class="weather-today"><i class="fa-solid fa-sun" style="color:#f5a623;font-size:2rem"></i><div class="weather-temp">82&deg;F</div><div class="weather-desc">Sunny</div></div>
+            <div class="weather-days">
+              <div class="weather-day"><div>Thu</div><i class="fa-solid fa-cloud-rain"></i><div>79&deg;</div></div>
+              <div class="weather-day"><div>Fri</div><i class="fa-solid fa-cloud-rain"></i><div>74&deg;</div></div>
+              <div class="weather-day"><div>Sat</div><i class="fa-solid fa-sun"></i><div>85&deg;</div></div>
+              <div class="weather-day"><div>Sun</div><i class="fa-solid fa-cloud"></i><div>77&deg;</div></div>
+              <div class="weather-day"><div>Mon</div><i class="fa-solid fa-cloud-rain"></i><div>83&deg;</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-card">
+          <div class="sidebar-card-title"><i class="fa-solid fa-list-check"></i> Tasks <button class="btn-add-task" onclick="openModal('task_modal')">+ Add Task</button></div>
+          <div class="tasks-list" id="tasks_list">
+            <div class="task-item done"><i class="fa-solid fa-circle-check" style="color:#27ae60"></i> Call supplier about bounce houses</div>
+            <div class="task-item done"><i class="fa-solid fa-circle-check" style="color:#27ae60"></i> Update delivery schedule for weekend</div>
+            <div class="task-item"><i class="fa-regular fa-circle"></i> Review new customer applications</div>
+            <div class="task-item late"><span class="badge badge-late">late</span> <a href="#">Abby Weiss</a> <span class="task-date">Mar 29</span></div>
+            <div class="task-item"><i class="fa-regular fa-circle"></i> Order replacement parts for slide</div>
+            <div class="task-item"><i class="fa-regular fa-circle"></i> Follow up with Smith party quote</div>
+          </div>
+        </div>
+        <div class="sidebar-card">
+          <div class="sidebar-card-title"><i class="fa-solid fa-chart-pie"></i> Best Sellers (60 days)</div>
+          <div id="home_best_sellers_chart" style="height:200px"></div>
+        </div>
+        <div class="sidebar-promo-cards">
+          <div class="promo-card orange-card"><div class="promo-label">ERSPay Terminal</div><i class="fa-solid fa-credit-card"></i></div>
+          <div class="promo-card green-card"><div class="promo-label">Services &amp; Addons</div><i class="fa-solid fa-puzzle-piece"></i></div>
+          <div class="promo-card green-card2"><div class="promo-label">Capital Advance</div><i class="fa-solid fa-sack-dollar"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== ADMIN TAB =================== -->
+  <div id="tab_admin" class="tab-panel">
+    <div class="admin-grid">
+      <div class="admin-card" onclick="toggleGroup(document.querySelector('#admin_subnav .subnav_group:nth-child(1) .subnav_group_btn'))">
+        <i class="fa-solid fa-building"></i><div class="admin-card-title">General Config</div>
+        <div class="admin-card-desc">Company info, users, system settings, integrations</div>
+      </div>
+      <div class="admin-card" onclick="toggleGroup(document.querySelector('#admin_subnav .subnav_group:nth-child(2) .subnav_group_btn'))">
+        <i class="fa-solid fa-file-invoice"></i><div class="admin-card-title">Order Config</div>
+        <div class="admin-card-desc">Reminders, order options, coupons, service areas</div>
+      </div>
+      <div class="admin-card" onclick="toggleGroup(document.querySelector('#admin_subnav .subnav_group:nth-child(3) .subnav_group_btn'))">
+        <i class="fa-solid fa-file-lines"></i><div class="admin-card-title">Documents</div>
+        <div class="admin-card-desc">Templates, contracts, surveys, ERSMail</div>
+      </div>
+      <div class="admin-card" onclick="toggleGroup(document.querySelector('#admin_subnav .subnav_group:nth-child(4) .subnav_group_btn'))">
+        <i class="fa-solid fa-box"></i><div class="admin-card-title">Products</div>
+        <div class="admin-card-desc">Categories, items, pricing, addons</div>
+      </div>
+      <div class="admin-card" onclick="toggleGroup(document.querySelector('#admin_subnav .subnav_group:nth-child(5) .subnav_group_btn'))">
+        <i class="fa-solid fa-sliders"></i><div class="admin-card-title">Rules</div>
+        <div class="admin-card-desc">Adjustments, deposits, pricing, availability</div>
+      </div>
+      <div class="admin-card" onclick="toggleGroup(document.querySelector('#admin_subnav .subnav_group:nth-child(6) .subnav_group_btn'))">
+        <i class="fa-solid fa-globe"></i><div class="admin-card-title">Website</div>
+        <div class="admin-card-desc">Pages, images, gallery, navigation editor</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== SCHEDULING TAB =================== -->
+  <div id="tab_scheduling" class="tab-panel">
+    <div class="sched-toolbar">
+      <button class="btn-book" onclick="openModal('book_modal')"><i class="fa-solid fa-plus"></i> BOOK</button>
+      <select id="sched_filter" class="cal-filter-select" onchange="renderSchedCalendar()">
+        <option value="active">Active</option>
+        <option value="deliver">Active - Deliver</option>
+        <option value="pickup">Active - Customer Pickup</option>
+        <option value="incomplete">Incomplete</option>
+        <option value="quotes">Sent Quotes</option>
+        <option value="canceled">Canceled</option>
+      </select>
+      <button class="cal-nav-btn" onclick="changeSchedMonth(-1)">&#8249;</button>
+      <span id="sched_month_label" class="cal-month-label">May 2026</span>
+      <button class="cal-nav-btn" onclick="changeSchedMonth(1)">&#8250;</button>
+      <button class="btn-search-cal" onclick="openModal('search_modal')">Search &gt;&gt;</button>
+    </div>
+    <table class="ers-calendar-table full-cal">
+      <thead><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr></thead>
+      <tbody id="sched_cal_grid"></tbody>
+    </table>
+    <div id="sched_order_detail" class="order-detail-panel" style="display:none;"></div>
+    <div class="cal-legend">
+      <span><span class="legend-dot" style="background:#4472c4"></span> Service/Time in time</span>
+      <span><span class="legend-dot" style="background:#70ad47"></span> Delivery</span>
+      <span><span class="legend-dot" style="background:#ed7d31"></span> Pickup</span>
+      <span><span class="legend-dot" style="background:#bfbfbf"></span> Overnight/Multiday</span>
+      <span><span class="legend-dot" style="background:#ffd966"></span> Holidays</span>
+    </div>
+    <div class="autopay-options">
+      <button class="btn-autopay" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">&#9660; Autopay Options</button>
+      <div class="autopay-content" style="display:none">
+        <p>Autopay charges cards on file automatically based on your configured rules.</p>
+        <label><input type="checkbox" checked> Enable Autopay for Active Orders</label><br>
+        <label><input type="checkbox"> Charge 24hrs before event</label><br>
+        <label><input type="checkbox"> Send receipt email automatically</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== CUSTOMERS TAB =================== -->
+  <div id="tab_customers" class="tab-panel">
+    <div class="customers-toolbar">
+      <button class="btn-new-search" onclick="openModal('search_modal')"><i class="fa-solid fa-magnifying-glass"></i> New Search</button>
+      <button class="btn-search" onclick="filterCustomers()"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+      <button class="btn-create" onclick="openModal('customer_modal')"><i class="fa-solid fa-plus"></i> Create</button>
+      <button class="btn-contracts"><i class="fa-solid fa-file-contract"></i> Contracts</button>
+      <button class="btn-ersmail"><i class="fa-solid fa-envelope"></i> ERSMail</button>
+    </div>
+    <div class="customers-toolbar-row2">
+      <button class="btn-text-msg"><i class="fa-solid fa-comment"></i> Text Messaging</button>
+      <button class="btn-gift-cards"><i class="fa-solid fa-gift"></i> Gift Cards</button>
+      <button class="btn-tasks"><i class="fa-solid fa-list-check"></i> Tasks</button>
+      <button class="btn-contact-req active-btn"><i class="fa-solid fa-address-book"></i> Contact Requests</button>
+      <button class="btn-commercial-crm"><i class="fa-solid fa-briefcase"></i> Commercial CRM</button>
+    </div>
+    <div class="customers-filters-bar">
+      <div class="filters-toggle" onclick="toggleFilters()"><i class="fa-solid fa-filter"></i> Filters</div>
+      <div id="filters_panel" class="filters-panel" style="display:none">
+        <div class="filter-row">
+          <div class="form-group"><label>Name</label><input type="text" id="filter_name" class="form-control" placeholder="Customer name..."></div>
+          <div class="form-group"><label>Email</label><input type="text" id="filter_email" class="form-control" placeholder="Email..."></div>
+          <div class="form-group"><label>Phone</label><input type="text" id="filter_phone" class="form-control" placeholder="Phone..."></div>
+          <div class="form-group"><label>Company</label><input type="text" id="filter_company" class="form-control" placeholder="Company..."></div>
+        </div>
+        <button class="btn-primary" onclick="filterCustomers()">Apply Filters</button>
+        <button class="btn-secondary" onclick="clearFilters()">Clear</button>
+      </div>
+      <button class="btn-export" onclick="alert('Exporting customer list...')">Export &gt;&gt;</button>
+    </div>
+    <table class="ers-customers-table" id="customers_table">
+      <thead>
+        <tr>
+          <th></th><th onclick="sortCustomers('name')" class="sortable">Name <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortCustomers('email')" class="sortable">Email <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortCustomers('phone')" class="sortable">Phone <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortCustomers('company')" class="sortable">Company <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortCustomers('complete')" class="sortable">Complete <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortCustomers('last')" class="sortable">Last <i class="fa-solid fa-sort"></i></th>
+          <th>Upcoming</th><th>Next Order</th><th>Quotes</th><th>Next Quote</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="customers_tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- =================== DELIVERY TAB =================== -->
+  <div id="tab_delivery" class="tab-panel">
+    <div class="delivery-layout">
+      <div class="delivery-main">
+        <div class="sched-toolbar">
+          <button class="cal-nav-btn" onclick="changeDeliveryMonth(-1)">&#8249;</button>
+          <span id="delivery_month_label" class="cal-month-label">May 2026</span>
+          <button class="cal-nav-btn" onclick="changeDeliveryMonth(1)">&#8250;</button>
+          <select class="cal-filter-select">
+            <option>Active - All</option><option>Active - Deliver</option><option>Active - Pickup</option>
+          </select>
+        </div>
+        <table class="ers-calendar-table full-cal">
+          <thead><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr></thead>
+          <tbody id="delivery_cal_grid"></tbody>
+        </table>
+        <div id="delivery_order_detail" class="order-detail-panel" style="display:none;"></div>
+        <div class="cal-legend">
+          <span><span class="legend-dot" style="background:#70ad47"></span> Delivery</span>
+          <span><span class="legend-dot" style="background:#ed7d31"></span> Pickup</span>
+        </div>
+      </div>
+      <div class="delivery-sidebar">
+        <div class="routing-header">Routing version: V3</div>
+        <ul class="routing-links">
+          <li><a href="#" onclick="alert('Assign Drivers');return false;"><i class="fa-solid fa-user-tie"></i> Assign Drivers</a></li>
+          <li><a href="#" onclick="alert('Print Contracts');return false;"><i class="fa-solid fa-file-contract"></i> Print Contracts</a></li>
+          <li><a href="#" onclick="alert('Print Invoices');return false;"><i class="fa-solid fa-file-invoice"></i> Print Invoices</a></li>
+          <li><a href="#" onclick="alert('Packing List');return false;"><i class="fa-solid fa-list"></i> Packing List</a></li>
+          <li><a href="#" onclick="alert('Product Status Report');return false;"><i class="fa-solid fa-chart-bar"></i> Product Status Report</a></li>
+          <li><a href="#" onclick="alert('Product Attention Report');return false;"><i class="fa-solid fa-triangle-exclamation"></i> Product Attention Report</a></li>
+          <li><a href="#" onclick="alert('Truck Tracker');return false;"><i class="fa-solid fa-location-dot"></i> Truck Tracker</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== REPORTS TAB =================== -->
+  <div id="tab_reports" class="tab-panel">
+    <div class="reports-grid">
+      <div class="report-card"><div class="report-card-title">Best Sellers (60 days)</div><div id="rpt_best_sellers" style="height:280px"></div></div>
+      <div class="report-card"><div class="report-card-title">Today's Payments</div><div class="today-payments-widget"><div class="today-payment-amount">$0.00</div><div class="today-payment-sub">No payments today</div><div class="today-payment-bar"><canvas id="rpt_today_bar" height="80"></canvas></div></div></div>
+      <div class="report-card"><div class="report-card-title">Monthly Payments Received</div><div id="rpt_monthly" style="height:280px"></div></div>
+      <div class="report-card"><div class="report-card-title">Employee Sales Month to Date</div><div id="rpt_employee" style="height:280px"><div class="no-data">No data</div></div></div>
+    </div>
+  </div>
+
+  <!-- =================== MARKETING TAB =================== -->
+  <div id="tab_marketing" class="tab-panel">
+    <h2 class="section-title">Marketing Dashboard</h2>
+    <div class="marketing-grid">
+      <div class="marketing-card"><h3>Search Engine Optimization (SEO)</h3><p>Maximize your business online impact with tailored SEO strategies. Enhance search engine rankings and attract more organic traffic.</p><button class="btn-demo" onclick="alert('SEO Demo booking coming soon!')">Book A Demo</button></div>
+      <div class="marketing-card"><h3>Facebook Ads</h3><p>Elevate your marketing with specialized Facebook Ads services, showcasing your products to interested customers.</p><button class="btn-demo" onclick="alert('Facebook Ads Demo booking coming soon!')">Book A Demo</button></div>
+      <div class="marketing-card"><h3>Google Ads</h3><p>Leverage the power of Google Ads to drive more traffic and bookings for your business with targeted campaigns.</p><button class="btn-demo" onclick="alert('Google Ads Demo booking coming soon!')">Book A Demo</button></div>
+      <div class="marketing-card"><h3>HighLevel</h3><p>Discover the power of HighLevel, our advanced marketing and automation platform.</p><button class="btn-demo" onclick="alert('HighLevel Demo booking coming soon!')">Book A Demo</button></div>
+    </div>
+  </div>
+
+  <!-- =================== HELP TAB =================== -->
+  <div id="tab_help" class="tab-panel">
+    <h2 class="section-title">Help &amp; Support</h2>
+    <div class="help-grid">
+      <div class="help-card" onclick="alert('Opening Documentation...')"><i class="fa-solid fa-book"></i><h3>Documentation</h3><p>Access the complete ERS user manual.</p></div>
+      <div class="help-card" onclick="alert('Opening Video Tutorials...')"><i class="fa-solid fa-video"></i><h3>Video Tutorials</h3><p>Watch step-by-step video tutorials.</p></div>
+      <div class="help-card" onclick="alert('Opening Support Ticket...')"><i class="fa-solid fa-headset"></i><h3>Contact Support</h3><p>Submit a support ticket or chat with our team.</p></div>
+      <div class="help-card" onclick="alert('Opening Community Forum...')"><i class="fa-solid fa-comments"></i><h3>Community Forum</h3><p>Connect with other ERS users.</p></div>
+    </div>
+  </div>
+
 </div>
 <script src="js/app.js"></script>
 </body>
